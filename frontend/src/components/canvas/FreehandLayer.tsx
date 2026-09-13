@@ -295,7 +295,7 @@ export function FreehandLayer() {
           <div
             className={cn(
               "absolute border border-accent bg-selection-box",
-              tool === "ellipse" ? "rounded-full" : "rounded-md",
+              tool === "ellipse" ? "rounded-full" : "rounded-xl",
             )}
             style={{
               left: draftRect.left,

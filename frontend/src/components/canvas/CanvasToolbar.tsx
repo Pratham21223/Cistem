@@ -1,4 +1,3 @@
-import { useViewport, useReactFlow } from "@xyflow/react";
 import {
   ArrowUpRight,
   Circle,
@@ -6,7 +5,6 @@ import {
   Frame,
   Hand,
   ImagePlus,
-  Maximize,
   Pencil,
   Pointer,
   Spline,
@@ -14,8 +12,6 @@ import {
   StickyNote,
   Tag,
   Type,
-  ZoomIn,
-  ZoomOut,
   type LucideIcon,
 } from "lucide-react";
 import { Fragment, useCallback } from "react";
@@ -57,8 +53,6 @@ const TOOL_GROUPS: ToolItem[][] = [
 export function CanvasToolbar() {
   const tool = useCanvasStore((state) => state.tool);
   const setTool = useCanvasStore((state) => state.setTool);
-  const { zoom } = useViewport();
-  const { zoomIn, zoomOut, fitView } = useReactFlow();
   const addImage = useImagePlacement();
 
   const handleImageUpload = useCallback(
@@ -71,15 +65,15 @@ export function CanvasToolbar() {
   );
 
   return (
-    <div className="pointer-events-none absolute left-1/2 top-3 z-20 flex -translate-x-1/2 items-center gap-2">
+    <div className="pointer-events-none absolute inset-x-0 top-3 z-20 flex justify-center px-3">
       <div
         role="toolbar"
         aria-label="Canvas tools"
-        className="pointer-events-auto flex h-11 items-center gap-0.5 rounded-2xl border border-border bg-surface p-1 shadow-md"
+        className="island pointer-events-auto flex h-12 items-center gap-0.5 px-1.5"
       >
         {TOOL_GROUPS.map((group, groupIndex) => (
           <Fragment key={groupIndex}>
-            {groupIndex > 0 ? <Separator orientation="vertical" className="mx-1 h-5" /> : null}
+            {groupIndex > 0 ? <Separator orientation="vertical" className="mx-1 h-6" /> : null}
             {group.map((item) => {
               const Icon = item.icon;
               const active = tool === item.tool;
@@ -88,16 +82,16 @@ export function CanvasToolbar() {
                   <TooltipTrigger asChild>
                     <Button
                       variant="ghost"
-                      size="icon"
+                      size="tool"
                       aria-label={item.label}
                       aria-pressed={active}
                       className={cn(
                         active &&
-                          "bg-accent text-accent-foreground shadow-xs hover:bg-accent hover:text-accent-foreground",
+                          "bg-accent text-accent-foreground hover:bg-accent-hover hover:text-accent-foreground",
                       )}
                       onClick={() => setTool(item.tool)}
                     >
-                      <Icon size={17} strokeWidth={1.75} />
+                      <Icon size={18} strokeWidth={1.75} />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -110,17 +104,17 @@ export function CanvasToolbar() {
           </Fragment>
         ))}
 
-        <Separator orientation="vertical" className="mx-1 h-5" />
+        <Separator orientation="vertical" className="mx-1 h-6" />
 
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
-              size="icon"
+              size="tool"
               aria-label="Upload image"
               onClick={() => document.getElementById("cistem-image-upload")?.click()}
             >
-              <ImagePlus size={17} strokeWidth={1.75} />
+              <ImagePlus size={18} strokeWidth={1.75} />
             </Button>
           </TooltipTrigger>
           <TooltipContent>Upload image</TooltipContent>
@@ -132,55 +126,6 @@ export function CanvasToolbar() {
           className="hidden"
           onChange={handleImageUpload}
         />
-      </div>
-
-      <div
-        role="toolbar"
-        aria-label="Zoom controls"
-        className="pointer-events-auto flex h-11 items-center gap-0.5 rounded-2xl border border-border bg-surface p-1 shadow-md"
-      >
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label="Zoom out"
-              onClick={() => void zoomOut()}
-            >
-              <ZoomOut size={16} strokeWidth={1.75} />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Zoom out</TooltipContent>
-        </Tooltip>
-        <span
-          className="w-11 text-center text-caption text-text-secondary"
-          aria-live="polite"
-          aria-label="Zoom level"
-        >
-          {Math.round(zoom * 100)}%
-        </span>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" aria-label="Zoom in" onClick={() => void zoomIn()}>
-              <ZoomIn size={16} strokeWidth={1.75} />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Zoom in</TooltipContent>
-        </Tooltip>
-        <Separator orientation="vertical" className="mx-1 h-5" />
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label="Fit view"
-              onClick={() => void fitView({ padding: 0.2 })}
-            >
-              <Maximize size={16} strokeWidth={1.75} />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Zoom to fit</TooltipContent>
-        </Tooltip>
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { useProjectStore } from "@/stores/projectStore";
 import type { RightPanelTab } from "@/types/project";
 
@@ -22,30 +23,102 @@ export function ContextPanel() {
   const setActiveRightTab = useProjectStore((state) => state.setActiveRightTab);
   const toggleRightPanel = useProjectStore((state) => state.toggleRightPanel);
 
-  if (collapsed) {
-    return (
-      <aside
-        aria-label="Context panel"
-        className="flex w-11 shrink-0 flex-col items-center gap-1 border-l border-border bg-surface py-2 shadow-sm transition-[width] duration-base ease-standard"
+  return (
+    <aside
+      aria-label="Context panel"
+      className="pointer-events-none absolute bottom-3 right-3 top-16 z-30 flex w-90 max-w-[calc(100vw-1.5rem)] flex-col items-end"
+    >
+      <div
+        className={cn(
+          "panel-surface pointer-events-auto flex h-full w-full flex-col overflow-hidden transition-all duration-base ease-standard",
+          collapsed && "pointer-events-none invisible translate-x-2 opacity-0",
+        )}
+        inert={collapsed || undefined}
+        aria-hidden={collapsed}
       >
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label="Expand context panel"
-          aria-expanded={false}
-          onClick={toggleRightPanel}
+        <header className="flex h-11 shrink-0 items-center justify-between border-b border-border px-3">
+          <h2 className="text-panel-title text-text-primary">Understanding</h2>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label="Collapse context panel"
+            aria-expanded
+            onClick={toggleRightPanel}
+          >
+            <PanelRightClose size={16} strokeWidth={1.75} />
+          </Button>
+        </header>
+
+        <Tabs
+          value={activeTab}
+          onValueChange={(value) => setActiveRightTab(value as RightPanelTab)}
+          className="flex min-h-0 flex-1 flex-col"
         >
-          <PanelRightOpen size={16} strokeWidth={1.75} />
-        </Button>
+          <TabsList className="border-b border-border">
+            {TAB_ITEMS.map((item) => {
+              const Icon = item.icon;
+              return (
+                <TabsTrigger key={item.value} value={item.value}>
+                  <Icon size={14} strokeWidth={1.75} aria-hidden />
+                  {item.label}
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+
+          <TabsContent value="context" className="min-h-0 flex-1">
+            <ScrollArea className="h-full">
+              <ContextOverview />
+            </ScrollArea>
+          </TabsContent>
+          <TabsContent value="review" className="min-h-0 flex-1">
+            <ScrollArea className="h-full">
+              <ReviewPanel />
+            </ScrollArea>
+          </TabsContent>
+          <TabsContent value="prompt" className="min-h-0 flex-1">
+            <ScrollArea className="h-full">
+              <PromptPreview />
+            </ScrollArea>
+          </TabsContent>
+        </Tabs>
+      </div>
+
+      <div
+        className={cn(
+          "island pointer-events-auto flex w-11 flex-col items-center gap-1 p-1.5 transition-all duration-base ease-standard",
+          !collapsed && "pointer-events-none invisible translate-x-2 opacity-0",
+        )}
+        inert={!collapsed || undefined}
+        aria-hidden={!collapsed}
+      >
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Expand context panel"
+              aria-expanded={false}
+              onClick={toggleRightPanel}
+            >
+              <PanelRightOpen size={16} strokeWidth={1.75} />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="left">Open understanding</TooltipContent>
+        </Tooltip>
+
         {TAB_ITEMS.map((item) => {
           const Icon = item.icon;
+          const isActive = activeTab === item.value;
           return (
             <Tooltip key={item.value}>
               <TooltipTrigger asChild>
                 <Button
-                  variant={activeTab === item.value ? "primary" : "ghost"}
-                  size="icon-sm"
+                  variant="ghost"
+                  size="icon"
+                  className={cn(isActive && "bg-accent-muted text-accent")}
                   aria-label={item.label}
+                  aria-pressed={isActive}
                   onClick={() => {
                     setActiveRightTab(item.value);
                     toggleRightPanel();
@@ -58,57 +131,7 @@ export function ContextPanel() {
             </Tooltip>
           );
         })}
-      </aside>
-    );
-  }
-
-  return (
-    <aside
-      aria-label="Context panel"
-      className="flex w-[360px] shrink-0 flex-col border-l border-border bg-surface shadow-sm transition-[width] duration-base ease-standard"
-    >
-      <div className="flex h-11 shrink-0 items-center justify-between border-b border-border px-3">
-        <h2 className="text-panel-title text-text-primary">Understanding</h2>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label="Collapse context panel"
-          aria-expanded
-          onClick={toggleRightPanel}
-        >
-          <PanelRightClose size={16} strokeWidth={1.75} />
-        </Button>
       </div>
-
-      <Tabs
-        value={activeTab}
-        onValueChange={(value) => setActiveRightTab(value as RightPanelTab)}
-        className="flex min-h-0 flex-1 flex-col"
-      >
-        <TabsList className="shrink-0 px-3">
-          {TAB_ITEMS.map((item) => (
-            <TabsTrigger key={item.value} value={item.value}>
-              {item.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-
-        <TabsContent value="context" className="min-h-0 flex-1">
-          <ScrollArea className="h-full">
-            <ContextOverview />
-          </ScrollArea>
-        </TabsContent>
-        <TabsContent value="review" className="min-h-0 flex-1">
-          <ScrollArea className="h-full">
-            <ReviewPanel />
-          </ScrollArea>
-        </TabsContent>
-        <TabsContent value="prompt" className="min-h-0 flex-1">
-          <ScrollArea className="h-full">
-            <PromptPreview />
-          </ScrollArea>
-        </TabsContent>
-      </Tabs>
     </aside>
   );
 }

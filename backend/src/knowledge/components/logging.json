@@ -1,0 +1,29 @@
+{
+  "type": "logging",
+  "name": "Logging",
+  "category": "observability",
+  "purpose": [
+    "structured logs",
+    "audit trails",
+    "debugging"
+  ],
+  "characteristics": {
+    "retention": "tiered",
+    "format": "structured JSON preferred"
+  },
+  "tradeoffs": [
+    "storage cost",
+    "PII leakage risk if unmanaged"
+  ],
+  "alternatives": [
+    "managed log services"
+  ],
+  "common_patterns": [
+    "correlation IDs",
+    "log levels",
+    "retention policies"
+  ],
+  "anti_patterns": [
+    "logging secrets, tokens, or full user payloads"
+  ]
+}

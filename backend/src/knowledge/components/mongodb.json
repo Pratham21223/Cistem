@@ -1,0 +1,28 @@
+{
+  "type": "mongodb",
+  "name": "MongoDB",
+  "category": "storage",
+  "purpose": [
+    "document storage",
+    "flexible schema",
+    "rapid iteration"
+  ],
+  "characteristics": {
+    "consistency": "tunable",
+    "model": "document"
+  },
+  "tradeoffs": [
+    "schema drift without governance",
+    "limited multi-document joins"
+  ],
+  "alternatives": [
+    "PostgreSQL with JSONB"
+  ],
+  "common_patterns": [
+    "embed vs reference modeling",
+    "indexed query patterns"
+  ],
+  "anti_patterns": [
+    "document store for highly relational data with many joins"
+  ]
+}

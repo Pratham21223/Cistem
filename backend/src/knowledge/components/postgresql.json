@@ -1,0 +1,32 @@
+{
+  "type": "postgresql",
+  "name": "PostgreSQL",
+  "category": "storage",
+  "purpose": [
+    "transactional relational data",
+    "strong consistency",
+    "complex queries"
+  ],
+  "characteristics": {
+    "consistency": "strong",
+    "durability": "high",
+    "model": "relational"
+  },
+  "tradeoffs": [
+    "primary node scales vertically first",
+    "replica lag under load"
+  ],
+  "alternatives": [
+    "MySQL",
+    "managed relational databases"
+  ],
+  "common_patterns": [
+    "primary plus read replicas",
+    "connection pooling",
+    "indexed queries"
+  ],
+  "anti_patterns": [
+    "one unindexed hot table",
+    "long transactions holding locks"
+  ]
+}

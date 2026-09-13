@@ -1,0 +1,113 @@
+{
+  "domain": "video_streaming",
+  "name": "Video Streaming",
+  "summary": "Upload, transcode, catalog, and stream video at scale.",
+  "keywords": [
+    "video streaming",
+    "video platform",
+    "streaming",
+    "vod",
+    "ott"
+  ],
+  "requirements": [
+    {
+      "kind": "scale",
+      "value": {
+        "users": 50000000,
+        "unit": "dau"
+      },
+      "original_text": "Large global audience"
+    },
+    {
+      "kind": "latency",
+      "value": {
+        "ms": 500
+      },
+      "original_text": "Fast start playback"
+    }
+  ],
+  "components": [
+    {
+      "key": "cdn",
+      "type": "cdn",
+      "label": "Video CDN"
+    },
+    {
+      "key": "media",
+      "type": "object_storage",
+      "label": "Video Storage"
+    },
+    {
+      "key": "api",
+      "type": "api_service",
+      "label": "Catalog & Playback API"
+    },
+    {
+      "key": "db",
+      "type": "postgresql",
+      "label": "Catalog Database"
+    },
+    {
+      "key": "cache",
+      "type": "redis",
+      "label": "Playback Cache"
+    },
+    {
+      "key": "stream",
+      "type": "kafka",
+      "label": "Encoding Pipeline"
+    },
+    {
+      "key": "transcode",
+      "type": "worker",
+      "label": "Transcoding Workers"
+    },
+    {
+      "key": "search",
+      "type": "search_service",
+      "label": "Search"
+    },
+    {
+      "key": "recs",
+      "type": "recommendation_service",
+      "label": "Recommendations"
+    }
+  ],
+  "connections": [
+    {
+      "from": "cdn",
+      "to": "media",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "db",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "cache",
+      "type": "data_flow"
+    },
+    {
+      "from": "stream",
+      "to": "transcode",
+      "type": "request_flow"
+    },
+    {
+      "from": "transcode",
+      "to": "media",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "search",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "recs",
+      "type": "request_flow"
+    }
+  ]
+}

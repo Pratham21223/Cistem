@@ -1,0 +1,28 @@
+{
+  "type": "search_service",
+  "name": "Search Service",
+  "category": "services",
+  "purpose": [
+    "search API",
+    "query relevance",
+    "facets"
+  ],
+  "characteristics": {
+    "workload": "read heavy",
+    "index": "derived data"
+  },
+  "tradeoffs": [
+    "index freshness lag",
+    "relevance tuning effort"
+  ],
+  "alternatives": [
+    "database full-text search at small scale"
+  ],
+  "common_patterns": [
+    "indexing pipeline",
+    "alias-based reindexing"
+  ],
+  "anti_patterns": [
+    "running complex full-text search directly against the primary database at scale"
+  ]
+}

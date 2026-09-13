@@ -1,0 +1,30 @@
+{
+  "type": "reverse_proxy",
+  "name": "Reverse Proxy",
+  "category": "networking",
+  "purpose": [
+    "TLS termination",
+    "static serving",
+    "request buffering"
+  ],
+  "characteristics": {
+    "throughput": "high",
+    "deployment": "single point of entry"
+  },
+  "tradeoffs": [
+    "configuration complexity",
+    "another hop to operate"
+  ],
+  "alternatives": [
+    "load balancer",
+    "API gateway",
+    "managed edge"
+  ],
+  "common_patterns": [
+    "TLS termination",
+    "path-based routing"
+  ],
+  "anti_patterns": [
+    "running the proxy unmonitored as the only entry point"
+  ]
+}

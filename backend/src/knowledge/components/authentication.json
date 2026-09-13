@@ -1,0 +1,29 @@
+{
+  "type": "authentication",
+  "name": "Authentication",
+  "category": "services",
+  "purpose": [
+    "identity verification",
+    "session issuance",
+    "access tokens"
+  ],
+  "characteristics": {
+    "criticality": "high",
+    "integration": "external identity provider"
+  },
+  "tradeoffs": [
+    "external dependency",
+    "token lifecycle and revocation complexity"
+  ],
+  "alternatives": [
+    "identity provider",
+    "managed auth services"
+  ],
+  "common_patterns": [
+    "OAuth/OIDC",
+    "short-lived access tokens with refresh"
+  ],
+  "anti_patterns": [
+    "custom password storage without expertise"
+  ]
+}

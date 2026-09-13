@@ -1,0 +1,124 @@
+{
+  "domain": "food_delivery",
+  "name": "Food Delivery",
+  "summary": "Restaurant browsing, ordering, payments, and live driver tracking.",
+  "keywords": [
+    "food delivery",
+    "restaurant",
+    "delivery app",
+    "takeout"
+  ],
+  "requirements": [
+    {
+      "kind": "realtime",
+      "value": true,
+      "original_text": "Real-time order and driver tracking"
+    },
+    {
+      "kind": "latency",
+      "value": {
+        "ms": 300
+      },
+      "original_text": "Fast nearby restaurant search"
+    }
+  ],
+  "components": [
+    {
+      "key": "lb",
+      "type": "load_balancer",
+      "label": "Load Balancer"
+    },
+    {
+      "key": "api",
+      "type": "api_service",
+      "label": "Order & Tracking API"
+    },
+    {
+      "key": "db",
+      "type": "postgresql",
+      "label": "Orders Database"
+    },
+    {
+      "key": "cache",
+      "type": "redis",
+      "label": "Geo & Session Cache"
+    },
+    {
+      "key": "search",
+      "type": "search_service",
+      "label": "Restaurant Search"
+    },
+    {
+      "key": "stream",
+      "type": "kafka",
+      "label": "Order Events"
+    },
+    {
+      "key": "worker",
+      "type": "worker",
+      "label": "Dispatch Worker"
+    },
+    {
+      "key": "notify",
+      "type": "notification_service",
+      "label": "Notifications"
+    },
+    {
+      "key": "pay",
+      "type": "payment_service",
+      "label": "Payments"
+    },
+    {
+      "key": "cdn",
+      "type": "cdn",
+      "label": "Menu Assets"
+    }
+  ],
+  "connections": [
+    {
+      "from": "lb",
+      "to": "api",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "db",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "cache",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "search",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "stream",
+      "type": "event_flow"
+    },
+    {
+      "from": "stream",
+      "to": "worker",
+      "type": "request_flow"
+    },
+    {
+      "from": "worker",
+      "to": "notify",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "pay",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "cdn",
+      "type": "request_flow"
+    }
+  ]
+}

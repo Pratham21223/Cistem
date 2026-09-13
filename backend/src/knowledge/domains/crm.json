@@ -1,0 +1,111 @@
+{
+  "domain": "crm",
+  "name": "CRM",
+  "summary": "Customer records, pipelines, and search across sales data.",
+  "keywords": [
+    "crm",
+    "customer relationship",
+    "sales pipeline",
+    "contacts"
+  ],
+  "requirements": [
+    {
+      "kind": "security",
+      "value": {
+        "area": "pii"
+      },
+      "original_text": "Customer PII must be protected"
+    },
+    {
+      "kind": "latency",
+      "value": {
+        "ms": 400
+      },
+      "original_text": "Fast record search"
+    }
+  ],
+  "components": [
+    {
+      "key": "api",
+      "type": "api_service",
+      "label": "CRM API"
+    },
+    {
+      "key": "auth",
+      "type": "authentication",
+      "label": "Authentication"
+    },
+    {
+      "key": "db",
+      "type": "postgresql",
+      "label": "Customer Records"
+    },
+    {
+      "key": "search",
+      "type": "elasticsearch",
+      "label": "Search Index"
+    },
+    {
+      "key": "cache",
+      "type": "redis",
+      "label": "Record Cache"
+    },
+    {
+      "key": "worker",
+      "type": "worker",
+      "label": "Index Worker"
+    },
+    {
+      "key": "notify",
+      "type": "notification_service",
+      "label": "Activity Notifications"
+    },
+    {
+      "key": "logs",
+      "type": "logging",
+      "label": "Audit Logs"
+    }
+  ],
+  "connections": [
+    {
+      "from": "api",
+      "to": "auth",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "db",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "cache",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "search",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "worker",
+      "type": "event_flow"
+    },
+    {
+      "from": "worker",
+      "to": "search",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "notify",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "logs",
+      "type": "data_flow"
+    }
+  ]
+}

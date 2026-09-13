@@ -1,0 +1,31 @@
+{
+  "type": "object_storage",
+  "name": "Object Storage",
+  "category": "storage",
+  "purpose": [
+    "blob storage",
+    "static assets",
+    "backups",
+    "media originals"
+  ],
+  "characteristics": {
+    "durability": "high",
+    "access": "HTTP API",
+    "cost": "per GB stored"
+  },
+  "tradeoffs": [
+    "eventual consistency on some providers",
+    "egress pricing"
+  ],
+  "alternatives": [
+    "S3-compatible providers",
+    "managed file storage"
+  ],
+  "common_patterns": [
+    "pre-signed upload/download URLs",
+    "lifecycle policies"
+  ],
+  "anti_patterns": [
+    "streaming large media through application servers"
+  ]
+}

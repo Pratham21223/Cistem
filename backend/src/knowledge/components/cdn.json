@@ -1,0 +1,31 @@
+{
+  "type": "cdn",
+  "name": "CDN",
+  "category": "networking",
+  "purpose": [
+    "static asset delivery",
+    "edge caching",
+    "media delivery"
+  ],
+  "characteristics": {
+    "latency": "low",
+    "throughput": "high",
+    "scope": "global edge"
+  },
+  "tradeoffs": [
+    "cache invalidation cost",
+    "stale content risk",
+    "egress pricing"
+  ],
+  "alternatives": [
+    "object storage + CDN",
+    "self-managed edge cache"
+  ],
+  "common_patterns": [
+    "immutable asset hashing",
+    "origin shield"
+  ],
+  "anti_patterns": [
+    "serving all traffic through a single origin region"
+  ]
+}

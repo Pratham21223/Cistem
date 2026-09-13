@@ -3,12 +3,15 @@ import { memo, useMemo, useState } from "react";
 
 import { NodeHandles } from "@/components/canvas/NodeHandles";
 import { RoughSvg } from "@/components/canvas/RoughSvg";
+import { SelectionOutline } from "@/components/canvas/SelectionOutline";
 import { roughRoundedRectanglePaths } from "@/engine/rough";
 import {
   CATEGORY_FILL_CLASS,
   CATEGORY_LABELS,
   PROVENANCE_DOT_CLASS,
   PROVENANCE_LABEL,
+  RESIZE_HANDLE_CLASSNAME,
+  RESIZE_LINE_CLASSNAME,
 } from "@/lib/canvasVisuals";
 import { ROUGH_STROKE_WIDTH } from "@/lib/constants";
 import { cn } from "@/lib/utils";
@@ -63,11 +66,9 @@ function SemanticNodeBody({ node, selected }: { node: SemanticNode; selected: bo
         if (draftLabel === null) startRename();
       }}
     >
-      {selected ? (
-        <div className="pointer-events-none absolute -inset-1.5 rounded-2xl border-2 border-dashed border-accent" />
-      ) : null}
+      <SelectionOutline selected={selected} />
 
-      <div className={cn("absolute inset-0 rounded-2xl", CATEGORY_FILL_CLASS[node.category])} />
+      <div className={cn("absolute inset-0 rounded-xl", CATEGORY_FILL_CLASS[node.category])} />
       <RoughSvg width={node.width} height={node.height} paths={paths} className="stroke-stroke" />
 
       {selected ? (
@@ -77,15 +78,15 @@ function SemanticNodeBody({ node, selected }: { node: SemanticNode; selected: bo
           isVisible
           onResizeStart={beginHistory}
           onResizeEnd={commitHistory}
-          lineClassName="!border-accent !border-dashed"
-          handleClassName="!h-2.5 !w-2.5 !rounded-xs !border !border-accent !bg-surface"
+          lineClassName={RESIZE_LINE_CLASSNAME}
+          handleClassName={RESIZE_HANDLE_CLASSNAME}
         />
       ) : null}
 
       <div className="relative z-10 flex h-full min-w-0 flex-col justify-center gap-0.5 px-4">
         {draftLabel !== null ? (
           <input
-            className="nodrag w-full rounded-xs border border-accent bg-surface px-1 font-hand text-[18px] font-semibold text-text-primary outline-none"
+            className="nodrag focus-ring w-full rounded-xs border border-accent bg-surface px-1 text-diagram-md font-semibold text-text-primary"
             value={draftLabel}
             autoFocus
             aria-label="Component name"
@@ -104,14 +105,11 @@ function SemanticNodeBody({ node, selected }: { node: SemanticNode; selected: bo
             }}
           />
         ) : (
-          <span
-            className="truncate font-hand text-[19px] font-semibold leading-tight text-ink"
-            title={node.label}
-          >
+          <span className="truncate text-diagram-lg font-semibold text-ink" title={node.label}>
             {node.label}
           </span>
         )}
-        <span className="truncate font-hand text-[16px] leading-tight text-ink-muted">
+        <span className="truncate text-diagram-sm text-ink-muted">
           {CATEGORY_LABELS[node.category]}
         </span>
       </div>
@@ -127,7 +125,7 @@ function SemanticNodeBody({ node, selected }: { node: SemanticNode; selected: bo
         aria-label={`Provenance: ${PROVENANCE_LABEL[node.provenance]}`}
       />
 
-      <NodeHandles />
+      <NodeHandles visible={selected} />
     </div>
   );
 }

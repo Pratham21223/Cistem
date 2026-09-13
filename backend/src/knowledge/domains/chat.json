@@ -1,0 +1,94 @@
+{
+  "domain": "chat",
+  "name": "Chat",
+  "summary": "Real-time messaging with presence, delivery, and history.",
+  "keywords": [
+    "chat",
+    "messaging",
+    "instant messaging",
+    "dm"
+  ],
+  "requirements": [
+    {
+      "kind": "realtime",
+      "value": true,
+      "original_text": "Real-time message delivery"
+    },
+    {
+      "kind": "availability",
+      "value": {
+        "target": "99.99%"
+      },
+      "original_text": "Messages must not be lost"
+    }
+  ],
+  "components": [
+    {
+      "key": "api",
+      "type": "api_service",
+      "label": "Messaging API"
+    },
+    {
+      "key": "db",
+      "type": "postgresql",
+      "label": "Message History"
+    },
+    {
+      "key": "presence",
+      "type": "redis",
+      "label": "Presence & Sessions"
+    },
+    {
+      "key": "bus",
+      "type": "kafka",
+      "label": "Message Bus"
+    },
+    {
+      "key": "delivery",
+      "type": "worker",
+      "label": "Delivery Worker"
+    },
+    {
+      "key": "notify",
+      "type": "notification_service",
+      "label": "Push Notifications"
+    },
+    {
+      "key": "media",
+      "type": "object_storage",
+      "label": "Attachments"
+    }
+  ],
+  "connections": [
+    {
+      "from": "api",
+      "to": "db",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "presence",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "bus",
+      "type": "event_flow"
+    },
+    {
+      "from": "bus",
+      "to": "delivery",
+      "type": "request_flow"
+    },
+    {
+      "from": "delivery",
+      "to": "notify",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "media",
+      "type": "data_flow"
+    }
+  ]
+}

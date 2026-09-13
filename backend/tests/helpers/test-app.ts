@@ -1,4 +1,5 @@
 import { createApp } from "@/app";
+import type { AIProvider } from "@/ai/types";
 import { loadConfig, type AppConfig } from "@/config/env";
 import { pino } from "pino";
 
@@ -13,8 +14,11 @@ export function testConfig(overrides: Partial<NodeJS.ProcessEnv> = {}): AppConfi
   });
 }
 
-export function buildTestApp(checkDatabase: () => Promise<void> = () => Promise.resolve()) {
+export function buildTestApp(
+  checkDatabase: () => Promise<void> = () => Promise.resolve(),
+  aiProvider: AIProvider | null = null,
+) {
   const config = testConfig();
   const logger = pino({ level: "silent" });
-  return createApp({ config, logger, checkDatabase });
+  return createApp({ config, logger, checkDatabase, aiProvider });
 }

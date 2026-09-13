@@ -1,0 +1,116 @@
+{
+  "domain": "saas",
+  "name": "SaaS",
+  "summary": "Multi-tenant application with accounts, APIs, and background jobs.",
+  "keywords": [
+    "saas",
+    "b2b",
+    "multi-tenant",
+    "subscription software"
+  ],
+  "requirements": [
+    {
+      "kind": "security",
+      "value": {
+        "area": "tenant_isolation"
+      },
+      "original_text": "Tenant data isolation"
+    },
+    {
+      "kind": "cost",
+      "value": {
+        "target": "efficient"
+      },
+      "original_text": "Keep infrastructure costs predictable"
+    }
+  ],
+  "components": [
+    {
+      "key": "lb",
+      "type": "load_balancer",
+      "label": "Load Balancer"
+    },
+    {
+      "key": "api",
+      "type": "api_service",
+      "label": "Application API"
+    },
+    {
+      "key": "auth",
+      "type": "authentication",
+      "label": "Authentication"
+    },
+    {
+      "key": "db",
+      "type": "postgresql",
+      "label": "Tenant Database"
+    },
+    {
+      "key": "cache",
+      "type": "redis",
+      "label": "Session Cache"
+    },
+    {
+      "key": "queue",
+      "type": "queue",
+      "label": "Background Jobs"
+    },
+    {
+      "key": "worker",
+      "type": "worker",
+      "label": "Job Workers"
+    },
+    {
+      "key": "logs",
+      "type": "logging",
+      "label": "Audit Logs"
+    },
+    {
+      "key": "notify",
+      "type": "notification_service",
+      "label": "Notifications"
+    }
+  ],
+  "connections": [
+    {
+      "from": "lb",
+      "to": "api",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "auth",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "db",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "cache",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "queue",
+      "type": "event_flow"
+    },
+    {
+      "from": "queue",
+      "to": "worker",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "logs",
+      "type": "data_flow"
+    },
+    {
+      "from": "worker",
+      "to": "notify",
+      "type": "request_flow"
+    }
+  ]
+}

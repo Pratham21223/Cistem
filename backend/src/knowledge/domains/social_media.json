@@ -1,0 +1,123 @@
+{
+  "domain": "social_media",
+  "name": "Social Media",
+  "summary": "A feed product with posting, follows, media, and fan-out to followers.",
+  "keywords": [
+    "social media",
+    "social network",
+    "feed",
+    "followers",
+    "posts"
+  ],
+  "requirements": [
+    {
+      "kind": "scale",
+      "value": {
+        "users": 10000000,
+        "unit": "dau"
+      },
+      "original_text": "Large read-heavy feed"
+    },
+    {
+      "kind": "latency",
+      "value": {
+        "ms": 200
+      },
+      "original_text": "Fast feed loading"
+    }
+  ],
+  "components": [
+    {
+      "key": "api",
+      "type": "api_service",
+      "label": "Feed & Graph API"
+    },
+    {
+      "key": "db",
+      "type": "postgresql",
+      "label": "Posts & Follows"
+    },
+    {
+      "key": "cache",
+      "type": "redis",
+      "label": "Feed Cache"
+    },
+    {
+      "key": "media",
+      "type": "object_storage",
+      "label": "Media Storage"
+    },
+    {
+      "key": "cdn",
+      "type": "cdn",
+      "label": "Media CDN"
+    },
+    {
+      "key": "stream",
+      "type": "kafka",
+      "label": "Activity Stream"
+    },
+    {
+      "key": "fanout",
+      "type": "worker",
+      "label": "Fan-out Worker"
+    },
+    {
+      "key": "search",
+      "type": "search_service",
+      "label": "Search"
+    },
+    {
+      "key": "notify",
+      "type": "notification_service",
+      "label": "Notifications"
+    }
+  ],
+  "connections": [
+    {
+      "from": "api",
+      "to": "db",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "cache",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "media",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "stream",
+      "type": "event_flow"
+    },
+    {
+      "from": "stream",
+      "to": "fanout",
+      "type": "request_flow"
+    },
+    {
+      "from": "fanout",
+      "to": "cache",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "search",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "notify",
+      "type": "request_flow"
+    },
+    {
+      "from": "cdn",
+      "to": "media",
+      "type": "data_flow"
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "domain": "ride_sharing",
+  "name": "Ride Sharing",
+  "summary": "Rider and driver matching with live location and trip lifecycle.",
+  "keywords": [
+    "ride sharing",
+    "rideshare",
+    "ride hailing",
+    "taxi",
+    "uber"
+  ],
+  "requirements": [
+    {
+      "kind": "realtime",
+      "value": true,
+      "original_text": "Live driver location updates"
+    },
+    {
+      "kind": "latency",
+      "value": {
+        "ms": 200
+      },
+      "original_text": "Fast driver matching"
+    },
+    {
+      "kind": "availability",
+      "value": {
+        "target": "99.99%"
+      },
+      "original_text": "High availability for active trips"
+    }
+  ],
+  "components": [
+    {
+      "key": "lb",
+      "type": "load_balancer",
+      "label": "Load Balancer"
+    },
+    {
+      "key": "api",
+      "type": "api_service",
+      "label": "Matching & Trip API"
+    },
+    {
+      "key": "db",
+      "type": "postgresql",
+      "label": "Trips Database"
+    },
+    {
+      "key": "geo",
+      "type": "redis",
+      "label": "Geo Index & Presence"
+    },
+    {
+      "key": "stream",
+      "type": "kafka",
+      "label": "Location Events"
+    },
+    {
+      "key": "matcher",
+      "type": "worker",
+      "label": "Dispatch Worker"
+    },
+    {
+      "key": "notify",
+      "type": "notification_service",
+      "label": "Rider/Driver Notifications"
+    },
+    {
+      "key": "pay",
+      "type": "payment_service",
+      "label": "Payments"
+    },
+    {
+      "key": "metrics",
+      "type": "metrics",
+      "label": "Trip Metrics"
+    }
+  ],
+  "connections": [
+    {
+      "from": "lb",
+      "to": "api",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "db",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "geo",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "stream",
+      "type": "event_flow"
+    },
+    {
+      "from": "stream",
+      "to": "matcher",
+      "type": "request_flow"
+    },
+    {
+      "from": "matcher",
+      "to": "notify",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "pay",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "metrics",
+      "type": "data_flow"
+    }
+  ]
+}

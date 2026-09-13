@@ -2,9 +2,10 @@ import { NodeResizer, type NodeProps } from "@xyflow/react";
 import { memo, useMemo, useState } from "react";
 
 import { RoughSvg } from "@/components/canvas/RoughSvg";
+import { SelectionOutline } from "@/components/canvas/SelectionOutline";
 import { roughRoundedRectanglePaths } from "@/engine/rough";
+import { RESIZE_HANDLE_CLASSNAME, RESIZE_LINE_CLASSNAME } from "@/lib/canvasVisuals";
 import { ROUGH_STROKE_WIDTH } from "@/lib/constants";
-import { cn } from "@/lib/utils";
 import { useCanvasStore } from "@/stores/canvasStore";
 
 export const FrameNode = memo(function FrameNode({ id, selected }: NodeProps) {
@@ -43,9 +44,7 @@ export const FrameNode = memo(function FrameNode({ id, selected }: NodeProps) {
 
   return (
     <div className="group relative h-full w-full">
-      {selected ? (
-        <div className="pointer-events-none absolute -inset-1.5 rounded-xl border-2 border-dashed border-accent" />
-      ) : null}
+      <SelectionOutline selected={selected} />
       <div className="absolute inset-0 rounded-lg bg-surface/40" />
       <RoughSvg
         width={node.width}
@@ -60,16 +59,13 @@ export const FrameNode = memo(function FrameNode({ id, selected }: NodeProps) {
           isVisible
           onResizeStart={beginHistory}
           onResizeEnd={commitHistory}
-          lineClassName="!border-accent !border-dashed"
-          handleClassName="!h-2.5 !w-2.5 !rounded-xs !border !border-accent !bg-surface"
+          lineClassName={RESIZE_LINE_CLASSNAME}
+          handleClassName={RESIZE_HANDLE_CLASSNAME}
         />
       ) : null}
       {draftLabel !== null ? (
         <input
-          className={cn(
-            "nodrag absolute -top-7 left-1 h-6 rounded-xs border border-accent bg-surface px-1.5",
-            "font-hand text-[16px] font-medium text-text-primary outline-none",
-          )}
+          className="nodrag focus-ring absolute -top-7 left-1 h-6 rounded-xs border border-accent bg-surface px-1.5 text-diagram-sm font-medium text-text-primary"
           value={draftLabel}
           autoFocus
           aria-label="Frame name"
@@ -86,7 +82,7 @@ export const FrameNode = memo(function FrameNode({ id, selected }: NodeProps) {
       ) : (
         <button
           type="button"
-          className="nodrag absolute -top-7 left-1 h-6 font-hand text-[16px] font-medium text-text-secondary hover:text-text-primary"
+          className="nodrag focus-ring absolute -top-7 left-1 h-6 rounded-sm px-1 text-diagram-sm font-medium text-text-secondary transition-colors duration-fast hover:text-text-primary"
           onDoubleClick={(event) => {
             event.stopPropagation();
             beginHistory();

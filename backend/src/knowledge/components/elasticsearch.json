@@ -1,0 +1,29 @@
+{
+  "type": "elasticsearch",
+  "name": "Elasticsearch / OpenSearch",
+  "category": "storage",
+  "purpose": [
+    "full-text search",
+    "log analytics",
+    "aggregations"
+  ],
+  "characteristics": {
+    "query": "inverted index",
+    "scaling": "distributed shards"
+  },
+  "tradeoffs": [
+    "cluster operations",
+    "index storage and reindex cost"
+  ],
+  "alternatives": [
+    "OpenSearch",
+    "database full-text search at small scale"
+  ],
+  "common_patterns": [
+    "denormalized search documents",
+    "index aliases for reindexing"
+  ],
+  "anti_patterns": [
+    "using the search index as the primary datastore"
+  ]
+}

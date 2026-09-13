@@ -1,0 +1,29 @@
+{
+  "type": "notification_service",
+  "name": "Notification Service",
+  "category": "services",
+  "purpose": [
+    "email",
+    "SMS",
+    "push notifications"
+  ],
+  "characteristics": {
+    "delivery": "async",
+    "retries": "required"
+  },
+  "tradeoffs": [
+    "deliverability management",
+    "third-party rate limits"
+  ],
+  "alternatives": [
+    "managed email/SMS APIs"
+  ],
+  "common_patterns": [
+    "outbox pattern",
+    "retry with backoff",
+    "per-channel templates"
+  ],
+  "anti_patterns": [
+    "sending notifications synchronously inside request handlers"
+  ]
+}

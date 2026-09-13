@@ -1,0 +1,31 @@
+{
+  "type": "api_gateway",
+  "name": "API Gateway",
+  "category": "networking",
+  "purpose": [
+    "request routing",
+    "auth offload",
+    "rate limiting",
+    "API composition"
+  ],
+  "characteristics": {
+    "throughput": "high",
+    "responsibility": "edge concerns"
+  },
+  "tradeoffs": [
+    "central bottleneck risk",
+    "config sprawl",
+    "vendor lock-in"
+  ],
+  "alternatives": [
+    "load balancer + reverse proxy",
+    "service mesh ingress"
+  ],
+  "common_patterns": [
+    "backend for frontend",
+    "per-route rate limits"
+  ],
+  "anti_patterns": [
+    "putting business logic in the gateway"
+  ]
+}

@@ -117,7 +117,7 @@ export const TypedEdge = memo(function TypedEdge({
           <div
             className={cn(
               "pointer-events-none absolute z-10 rounded-md border border-border bg-surface/95 px-1.5 py-0.5",
-              "font-hand text-[16px] leading-tight text-text-secondary shadow-xs",
+              "text-diagram-sm leading-tight text-text-secondary shadow-xs",
             )}
             style={{
               transform: `translate(-50%, -50%) translate(${labelPoint.x}px, ${labelPoint.y}px)`,

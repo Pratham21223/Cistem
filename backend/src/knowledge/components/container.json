@@ -1,0 +1,30 @@
+{
+  "type": "container",
+  "name": "Container",
+  "category": "compute",
+  "purpose": [
+    "packaging",
+    "isolation",
+    "immutable deployments"
+  ],
+  "characteristics": {
+    "portability": "high",
+    "startup": "fast",
+    "isolation": "process-level"
+  },
+  "tradeoffs": [
+    "orchestration complexity once many containers exist",
+    "image supply chain care"
+  ],
+  "alternatives": [
+    "serverless functions",
+    "virtual machines"
+  ],
+  "common_patterns": [
+    "immutable deploys",
+    "multi-stage builds"
+  ],
+  "anti_patterns": [
+    "mutable containers patched by hand"
+  ]
+}

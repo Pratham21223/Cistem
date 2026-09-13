@@ -1,5 +1,11 @@
 export type ProjectMode = "guest" | "authenticated";
 
+export type ProjectSummary = {
+  id: string;
+  name: string;
+  updatedAt: string;
+};
+
 export type SyncStatus = "local_only" | "saving" | "saved" | "pending" | "error";
 
 export type RightPanelTab = "context" | "review" | "prompt";

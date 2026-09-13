@@ -2,7 +2,9 @@ import { NodeResizer, type NodeProps } from "@xyflow/react";
 import { memo, useMemo } from "react";
 
 import { RoughSvg } from "@/components/canvas/RoughSvg";
+import { SelectionOutline } from "@/components/canvas/SelectionOutline";
 import { roughRoundedRectanglePaths } from "@/engine/rough";
+import { RESIZE_HANDLE_CLASSNAME, RESIZE_LINE_CLASSNAME } from "@/lib/canvasVisuals";
 import { cn } from "@/lib/utils";
 import { useCanvasStore } from "@/stores/canvasStore";
 
@@ -27,9 +29,10 @@ export const GroupNode = memo(function GroupNode({ id, selected }: NodeProps) {
 
   return (
     <div className="group relative h-full w-full">
+      <SelectionOutline selected={selected} />
       <div
         className={cn(
-          "absolute inset-0 rounded-2xl",
+          "absolute inset-0 rounded-xl",
           selected ? "bg-accent-muted" : "bg-surface-secondary/40",
         )}
       />
@@ -47,11 +50,11 @@ export const GroupNode = memo(function GroupNode({ id, selected }: NodeProps) {
           isVisible
           onResizeStart={beginHistory}
           onResizeEnd={commitHistory}
-          lineClassName="!border-accent !border-dashed"
-          handleClassName="!h-2.5 !w-2.5 !rounded-xs !border !border-accent !bg-surface"
+          lineClassName={RESIZE_LINE_CLASSNAME}
+          handleClassName={RESIZE_HANDLE_CLASSNAME}
         />
       ) : null}
-      <span className="pointer-events-none absolute -top-5 left-1 font-hand text-[16px] text-text-faint">
+      <span className="pointer-events-none absolute -top-5 left-1 text-diagram-sm text-text-faint">
         group
       </span>
     </div>

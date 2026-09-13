@@ -1,0 +1,27 @@
+{
+  "type": "user_service",
+  "name": "User Service",
+  "category": "services",
+  "purpose": [
+    "profiles",
+    "account data",
+    "preferences"
+  ],
+  "characteristics": {
+    "data": "relational",
+    "ownership": "single bounded context"
+  },
+  "tradeoffs": [
+    "extracting it early adds network hops and deploy overhead"
+  ],
+  "alternatives": [
+    "user module inside the main API"
+  ],
+  "common_patterns": [
+    "CRUD boundaries",
+    "profile caching"
+  ],
+  "anti_patterns": [
+    "splitting into a microservice before it has independent scale needs"
+  ]
+}

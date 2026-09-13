@@ -1,0 +1,33 @@
+{
+  "type": "redis",
+  "name": "Redis",
+  "category": "storage",
+  "purpose": [
+    "caching",
+    "sessions",
+    "rate limiting",
+    "ephemeral coordination"
+  ],
+  "characteristics": {
+    "latency": "very_low",
+    "throughput": "high",
+    "durability": "not a primary store"
+  },
+  "tradeoffs": [
+    "memory cost",
+    "cache invalidation complexity",
+    "data loss on unpersisted restarts"
+  ],
+  "alternatives": [
+    "Memcached",
+    "managed key-value caches"
+  ],
+  "common_patterns": [
+    "cache-aside",
+    "TTL-based expiry",
+    "distributed locks"
+  ],
+  "anti_patterns": [
+    "treating the cache as the source of truth"
+  ]
+}

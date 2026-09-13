@@ -1,0 +1,28 @@
+{
+  "type": "media_service",
+  "name": "Media Service",
+  "category": "services",
+  "purpose": [
+    "upload handling",
+    "image transforms",
+    "media delivery"
+  ],
+  "characteristics": {
+    "workload": "I/O heavy",
+    "delivery": "CDN fronted"
+  },
+  "tradeoffs": [
+    "storage and egress cost",
+    "processing pipeline complexity"
+  ],
+  "alternatives": [
+    "object storage plus CDN"
+  ],
+  "common_patterns": [
+    "pre-signed uploads",
+    "async transcoding/thumbnailing"
+  ],
+  "anti_patterns": [
+    "routing large media files through application servers"
+  ]
+}

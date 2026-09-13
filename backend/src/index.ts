@@ -1,5 +1,6 @@
 import { createServer } from "node:http";
 
+import { createAIProvider } from "@/ai/factory";
 import { createApp } from "@/app";
 import { loadConfig } from "@/config/env";
 import { createPrismaClient } from "@/db/client";
@@ -18,10 +19,12 @@ loadEnvironment();
 const config = loadConfig();
 const logger = createLogger(config);
 const prisma = createPrismaClient(config.databaseUrl);
+const aiProvider = createAIProvider(config.ai);
 
 const app = createApp({
   config,
   logger,
+  aiProvider,
   checkDatabase: async () => {
     await prisma.$queryRaw`SELECT 1`;
   },

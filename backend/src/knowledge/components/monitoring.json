@@ -1,0 +1,28 @@
+{
+  "type": "monitoring",
+  "name": "Monitoring",
+  "category": "observability",
+  "purpose": [
+    "health checks",
+    "uptime",
+    "dashboards"
+  ],
+  "characteristics": {
+    "scope": "system health",
+    "freshness": "near real time"
+  },
+  "tradeoffs": [
+    "alert fatigue if thresholds are noisy",
+    "dashboard sprawl"
+  ],
+  "alternatives": [
+    "managed monitoring services"
+  ],
+  "common_patterns": [
+    "symptom-based alerting",
+    "SLO dashboards"
+  ],
+  "anti_patterns": [
+    "dashboards with no owner or decision attached"
+  ]
+}

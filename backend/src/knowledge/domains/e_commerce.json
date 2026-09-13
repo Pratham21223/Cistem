@@ -1,0 +1,154 @@
+{
+  "domain": "e_commerce",
+  "name": "E-commerce",
+  "summary": "A storefront with catalog, checkout, payments, and order fulfillment.",
+  "keywords": [
+    "e-commerce",
+    "ecommerce",
+    "marketplace",
+    "storefront",
+    "online store",
+    "shopping"
+  ],
+  "requirements": [
+    {
+      "kind": "security",
+      "value": {
+        "area": "payments"
+      },
+      "original_text": "Secure payment processing"
+    },
+    {
+      "kind": "scale",
+      "value": {
+        "users": 1000000,
+        "unit": "dau"
+      },
+      "original_text": "Read-heavy product catalog at scale"
+    }
+  ],
+  "components": [
+    {
+      "key": "client",
+      "type": "api_service",
+      "label": "Web / Mobile Client"
+    },
+    {
+      "key": "lb",
+      "type": "load_balancer",
+      "label": "Load Balancer"
+    },
+    {
+      "key": "api",
+      "type": "api_service",
+      "label": "Catalog & Checkout API"
+    },
+    {
+      "key": "db",
+      "type": "postgresql",
+      "label": "Orders Database"
+    },
+    {
+      "key": "cache",
+      "type": "redis",
+      "label": "Catalog Cache"
+    },
+    {
+      "key": "pay",
+      "type": "payment_service",
+      "label": "Payment Service"
+    },
+    {
+      "key": "queue",
+      "type": "queue",
+      "label": "Order Queue"
+    },
+    {
+      "key": "worker",
+      "type": "worker",
+      "label": "Fulfillment Worker"
+    },
+    {
+      "key": "notify",
+      "type": "notification_service",
+      "label": "Notifications"
+    },
+    {
+      "key": "cdn",
+      "type": "cdn",
+      "label": "Asset CDN"
+    },
+    {
+      "key": "media",
+      "type": "object_storage",
+      "label": "Product Images"
+    },
+    {
+      "key": "search",
+      "type": "search_service",
+      "label": "Catalog Search"
+    }
+  ],
+  "connections": [
+    {
+      "from": "client",
+      "to": "lb",
+      "type": "request_flow"
+    },
+    {
+      "from": "lb",
+      "to": "api",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "db",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "cache",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "pay",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "queue",
+      "type": "event_flow"
+    },
+    {
+      "from": "queue",
+      "to": "worker",
+      "type": "request_flow"
+    },
+    {
+      "from": "worker",
+      "to": "notify",
+      "type": "request_flow"
+    },
+    {
+      "from": "worker",
+      "to": "db",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "search",
+      "type": "request_flow"
+    },
+    {
+      "from": "cdn",
+      "to": "media",
+      "type": "data_flow"
+    },
+    {
+      "from": "client",
+      "to": "cdn",
+      "type": "request_flow"
+    }
+  ]
+}

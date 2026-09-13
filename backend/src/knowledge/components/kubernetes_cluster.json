@@ -1,0 +1,31 @@
+{
+  "type": "kubernetes_cluster",
+  "name": "Kubernetes Cluster",
+  "category": "compute",
+  "purpose": [
+    "container orchestration",
+    "self-healing",
+    "declarative deploys"
+  ],
+  "characteristics": {
+    "scaling": "horizontal",
+    "operations": "high complexity"
+  },
+  "tradeoffs": [
+    "significant operational overhead",
+    "cost floor",
+    "steep learning curve"
+  ],
+  "alternatives": [
+    "managed container platforms",
+    "serverless",
+    "single VM deploys"
+  ],
+  "common_patterns": [
+    "rolling deploys",
+    "horizontal pod autoscaling"
+  ],
+  "anti_patterns": [
+    "Kubernetes for one small service with no scaling need"
+  ]
+}

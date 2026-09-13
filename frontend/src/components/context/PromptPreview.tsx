@@ -14,7 +14,7 @@ export function PromptPreview() {
     <PanelEmptyState icon={FileText} tone="violet" title="No prompt yet">
       Once the prompt system ships in Phase&nbsp;P4, Cistem compiles your architecture into a
       structured system-design prompt. It will include:
-      <div className="mt-4 w-full rounded-xl border border-border bg-surface-secondary/60 p-3 text-left">
+      <div className="mt-4 w-full rounded-lg border border-border bg-surface-secondary/50 p-3 text-left">
         <ul className="space-y-2">
           {PROMPT_SECTIONS.map((section) => (
             <li key={section} className="flex items-center gap-2">

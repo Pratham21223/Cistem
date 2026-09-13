@@ -1,0 +1,128 @@
+{
+  "domain": "learning",
+  "name": "Learning Platform",
+  "summary": "Courses, lessons, progress tracking, and media delivery.",
+  "keywords": [
+    "learning",
+    "lms",
+    "courses",
+    "education",
+    "e-learning"
+  ],
+  "requirements": [
+    {
+      "kind": "scale",
+      "value": {
+        "users": 500000,
+        "unit": "dau"
+      },
+      "original_text": "Many concurrent learners"
+    },
+    {
+      "kind": "latency",
+      "value": {
+        "ms": 500
+      },
+      "original_text": "Smooth lesson playback"
+    }
+  ],
+  "components": [
+    {
+      "key": "lb",
+      "type": "load_balancer",
+      "label": "Load Balancer"
+    },
+    {
+      "key": "api",
+      "type": "api_service",
+      "label": "Course API"
+    },
+    {
+      "key": "auth",
+      "type": "authentication",
+      "label": "Authentication"
+    },
+    {
+      "key": "db",
+      "type": "postgresql",
+      "label": "Courses & Progress"
+    },
+    {
+      "key": "cache",
+      "type": "redis",
+      "label": "Progress Cache"
+    },
+    {
+      "key": "media",
+      "type": "object_storage",
+      "label": "Lesson Media"
+    },
+    {
+      "key": "cdn",
+      "type": "cdn",
+      "label": "Media CDN"
+    },
+    {
+      "key": "worker",
+      "type": "worker",
+      "label": "Progress Worker"
+    },
+    {
+      "key": "notify",
+      "type": "notification_service",
+      "label": "Reminders"
+    },
+    {
+      "key": "search",
+      "type": "search_service",
+      "label": "Course Search"
+    }
+  ],
+  "connections": [
+    {
+      "from": "lb",
+      "to": "api",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "auth",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "db",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "cache",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "media",
+      "type": "data_flow"
+    },
+    {
+      "from": "cdn",
+      "to": "media",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "worker",
+      "type": "event_flow"
+    },
+    {
+      "from": "worker",
+      "to": "notify",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "search",
+      "type": "request_flow"
+    }
+  ]
+}

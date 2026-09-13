@@ -18,18 +18,18 @@ export function WorkspaceLayout() {
 
   return (
     <TooltipProvider delayDuration={300}>
-      <div className="flex h-full flex-col overflow-hidden bg-background">
+      <div className="relative h-full w-full overflow-hidden bg-canvas">
+        <main aria-label="Canvas workspace" className="absolute inset-0">
+          <CanvasArea />
+        </main>
+
         <TopBar />
-        <div className="flex min-h-0 flex-1">
-          <LeftSidebar />
-          <main className="relative min-w-0 flex-1" aria-label="Canvas workspace">
-            <CanvasArea />
-          </main>
-          <ContextPanel />
-        </div>
-        <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50 hidden items-center justify-center p-3 text-center max-md:flex">
-          <p className="rounded-lg bg-surface px-4 py-2 font-hand text-[16px] text-text-primary shadow-lg">
-            Cistem is optimized for desktop. Resize your window to keep designing.
+        <LeftSidebar />
+        <ContextPanel />
+
+        <div className="pointer-events-none absolute inset-x-0 bottom-16 z-50 hidden justify-center px-3 max-md:flex">
+          <p className="island px-4 py-2 text-body text-text-secondary">
+            Cistem is designed for desktop — resize your window to keep designing.
           </p>
         </div>
       </div>

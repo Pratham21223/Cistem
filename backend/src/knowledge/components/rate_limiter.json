@@ -1,0 +1,30 @@
+{
+  "type": "rate_limiter",
+  "name": "Rate Limiter",
+  "category": "security",
+  "purpose": [
+    "abuse protection",
+    "fair usage",
+    "cost control"
+  ],
+  "characteristics": {
+    "enforcement": "request admission",
+    "state": "counter-based"
+  },
+  "tradeoffs": [
+    "false positives",
+    "shared state overhead across instances"
+  ],
+  "alternatives": [
+    "API gateway rate limiting",
+    "edge rate limits"
+  ],
+  "common_patterns": [
+    "token bucket",
+    "sliding window",
+    "per-user quotas"
+  ],
+  "anti_patterns": [
+    "per-instance limits only, with multiple instances"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "type": "file_processing",
+  "name": "File Processing",
+  "category": "services",
+  "purpose": [
+    "document conversion",
+    "batch processing",
+    "async pipelines"
+  ],
+  "characteristics": {
+    "jobs": "long-running",
+    "scaling": "queue depth driven"
+  },
+  "tradeoffs": [
+    "job retries and partial failure handling",
+    "resource-heavy workers"
+  ],
+  "alternatives": [
+    "serverless functions for short jobs"
+  ],
+  "common_patterns": [
+    "queue-driven workers",
+    "idempotent processing steps"
+  ],
+  "anti_patterns": [
+    "blocking API requests on file conversion"
+  ]
+}

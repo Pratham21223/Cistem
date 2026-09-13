@@ -1,11 +1,15 @@
-import { ChevronRight, Search } from "lucide-react";
-import { Activity, Boxes, Cpu, Database, MessagesSquare, Network, ShieldCheck } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-import { useState } from "react";
+import { ChevronRight } from "lucide-react";
+import { useMemo, useState } from "react";
 
 import { CATEGORY_ACCENT_CLASS, CATEGORY_FILL_CLASS, CATEGORY_LABELS } from "@/lib/canvasVisuals";
+import { setComponentDragData } from "@/lib/componentDrag";
 import { cn } from "@/lib/utils";
+import { CATEGORY_ICONS } from "@/components/sidebar/categoryIcons";
+import { ComponentSearch } from "@/components/sidebar/ComponentSearch";
+import { useKnowledgeBase } from "@/hooks/useKnowledgeBase";
+import { useCanvasStore } from "@/stores/canvasStore";
 import type { ComponentCategory } from "@/types/architecture";
+import type { KnowledgeComponent } from "@/types/knowledge";
 
 const CATEGORY_ORDER: ComponentCategory[] = [
   "networking",
@@ -17,26 +21,26 @@ const CATEGORY_ORDER: ComponentCategory[] = [
   "security",
 ];
 
-const CATEGORY_ICONS: Record<ComponentCategory, LucideIcon> = {
-  networking: Network,
-  compute: Cpu,
-  storage: Database,
-  messaging: MessagesSquare,
-  services: Boxes,
-  observability: Activity,
-  security: ShieldCheck,
-  unknown: Boxes,
-};
-
 const SKELETON_WIDTHS = ["w-3/4", "w-2/3", "w-1/2"];
 
-/**
- * Sidebar skeleton for P1: category structure is in place, component data arrives with
- * the knowledge base in P2. Categories expand into skeleton rows so the future
- * interaction model is already visible.
- */
+/** P2 component palette: real knowledge-base data, drag-and-drop or click-to-place. */
 export function ComponentLibrary() {
-  const [expanded, setExpanded] = useState<Set<ComponentCategory>>(new Set());
+  const { components, status } = useKnowledgeBase();
+  const requestPlacement = useCanvasStore((state) => state.requestComponentPlacement);
+  const [expanded, setExpanded] = useState<Set<ComponentCategory>>(new Set(["networking"]));
+
+  const byCategory = useMemo(() => {
+    const grouped = new Map<ComponentCategory, KnowledgeComponent[]>();
+    for (const component of components) {
+      const list = grouped.get(component.category) ?? [];
+      list.push(component);
+      grouped.set(component.category, list);
+    }
+    for (const list of grouped.values()) {
+      list.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    return grouped;
+  }, [components]);
 
   const toggleCategory = (category: ComponentCategory): void => {
     setExpanded((current) => {
@@ -48,79 +52,97 @@ export function ComponentLibrary() {
   };
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="px-3 pt-3">
-        <div
-          className="flex h-9 items-center gap-2 rounded-lg border border-border bg-surface-secondary px-2.5 text-text-muted"
-          aria-disabled
-          title="Component search arrives in Phase P2"
-        >
-          <Search size={14} strokeWidth={1.75} />
-          <span className="flex-1 text-control">Search components</span>
-          <span className="rounded-full border border-border bg-surface px-2 py-0.5 text-eyebrow text-text-muted">
-            Soon
-          </span>
-        </div>
-      </div>
+    <div className="flex h-full min-h-0 flex-col">
+      <ComponentSearch
+        components={components}
+        onPlace={(component) => requestPlacement(component.type)}
+      />
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-3 py-2">
-        <ul className="flex flex-col gap-0.5">
-          {CATEGORY_ORDER.map((category) => {
-            const Icon = CATEGORY_ICONS[category];
-            const isOpen = expanded.has(category);
-            return (
-              <li key={category}>
-                <button
-                  type="button"
-                  aria-expanded={isOpen}
-                  onClick={() => toggleCategory(category)}
-                  className="group flex h-9 w-full items-center gap-2.5 rounded-lg px-2 text-left transition-colors duration-fast hover:bg-surface-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                >
-                  <span
-                    className={cn(
-                      "grid h-6 w-6 shrink-0 place-items-center rounded-md shadow-xs",
-                      CATEGORY_FILL_CLASS[category],
-                      CATEGORY_ACCENT_CLASS[category],
-                    )}
-                    aria-hidden
-                  >
-                    <Icon size={14} strokeWidth={2} />
-                  </span>
-                  <span className="flex-1 truncate text-control text-text-primary">
-                    {CATEGORY_LABELS[category]}
-                  </span>
-                  <ChevronRight
-                    size={14}
-                    strokeWidth={1.75}
-                    className={cn(
-                      "shrink-0 text-text-faint transition-transform duration-fast",
-                      isOpen && "rotate-90",
-                    )}
-                    aria-hidden
-                  />
-                </button>
-
-                {isOpen ? (
-                  <div className="mb-1.5 ml-10 mr-1 space-y-2 border-l border-border pl-3 pt-2">
-                    {SKELETON_WIDTHS.map((width) => (
-                      <div key={width} className="flex items-center gap-2" aria-hidden>
-                        <span className="h-3.5 w-3.5 shrink-0 rounded-xs bg-surface-tertiary" />
-                        <span className={cn("h-2.5 rounded-full bg-surface-tertiary", width)} />
-                      </div>
-                    ))}
-                    <p className="pt-0.5 text-caption text-text-muted">Palette loads in Phase P2</p>
-                  </div>
-                ) : null}
+      <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-2">
+        {status === "loading" ? (
+          <ul className="flex flex-col gap-0.5">
+            {CATEGORY_ORDER.map((category) => (
+              <li
+                key={category}
+                className="flex h-8 animate-pulse items-center gap-2.5 rounded-md px-2"
+                aria-hidden
+              >
+                <span className="h-6 w-6 shrink-0 rounded-sm bg-surface-tertiary" />
+                <span
+                  className={cn("h-2.5 rounded-full bg-surface-tertiary", SKELETON_WIDTHS[0])}
+                />
               </li>
-            );
-          })}
-        </ul>
+            ))}
+          </ul>
+        ) : (
+          <ul className="flex flex-col gap-0.5">
+            {CATEGORY_ORDER.map((category) => {
+              const Icon = CATEGORY_ICONS[category];
+              const items = byCategory.get(category) ?? [];
+              const isOpen = expanded.has(category);
+              return (
+                <li key={category}>
+                  <button
+                    type="button"
+                    aria-expanded={isOpen}
+                    onClick={() => toggleCategory(category)}
+                    className="group focus-ring flex h-8 w-full items-center gap-2.5 rounded-md px-2 text-left transition-colors duration-fast hover:bg-surface-secondary"
+                  >
+                    <span
+                      className={cn(
+                        "grid h-6 w-6 shrink-0 place-items-center rounded-sm border border-black/5",
+                        CATEGORY_FILL_CLASS[category],
+                        CATEGORY_ACCENT_CLASS[category],
+                      )}
+                      aria-hidden
+                    >
+                      <Icon size={14} strokeWidth={2} />
+                    </span>
+                    <span className="flex-1 truncate text-control text-text-primary">
+                      {CATEGORY_LABELS[category]}
+                    </span>
+                    <span className="text-micro text-text-faint">{items.length}</span>
+                    <ChevronRight
+                      size={14}
+                      strokeWidth={1.75}
+                      className={cn(
+                        "shrink-0 text-text-faint transition-transform duration-fast",
+                        isOpen && "rotate-90",
+                      )}
+                      aria-hidden
+                    />
+                  </button>
+
+                  {isOpen ? (
+                    <ul className="mb-1 ml-9 mr-1 space-y-0.5 border-l border-border pl-2 pt-1">
+                      {items.map((component) => (
+                        <li key={component.type}>
+                          <button
+                            type="button"
+                            draggable
+                            onDragStart={(event) => setComponentDragData(event, component)}
+                            onClick={() => requestPlacement(component.type)}
+                            title={component.purpose.join(" · ")}
+                            className="focus-ring flex h-7 w-full items-center gap-2 rounded-md px-2 text-left transition-colors duration-fast hover:bg-surface-secondary"
+                          >
+                            <span className="flex-1 truncate text-control text-text-secondary hover:text-text-primary">
+                              {component.name}
+                            </span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
 
-      <div className="border-t border-border px-4 py-3">
+      <div className="border-t border-border px-3 py-3">
         <p className="text-caption text-text-secondary">
-          Draw freehand or drop shapes now — the component palette and knowledge base arrive in
-          Phase&nbsp;P2.
+          Drag a component onto the canvas, or click to place it at the center.
         </p>
       </div>
     </div>

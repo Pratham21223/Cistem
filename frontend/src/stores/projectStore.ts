@@ -1,6 +1,12 @@
 import { create } from "zustand";
 
-import type { ProjectMode, RightPanelTab, SyncStatus, UiPreferences } from "@/types/project";
+import type {
+  ProjectMode,
+  ProjectSummary,
+  RightPanelTab,
+  SyncStatus,
+  UiPreferences,
+} from "@/types/project";
 
 const UI_PREFERENCES_KEY = "cistem.uiPreferences";
 
@@ -56,12 +62,29 @@ type ProjectStoreState = {
   mode: ProjectMode;
   syncStatus: SyncStatus;
   uiPreferences: UiPreferences;
+
+  /** Local guest projects, most recently updated first. */
+  projects: ProjectSummary[];
+  isDirty: boolean;
+  isSaving: boolean;
+  lastSavedAt: string | null;
+  saveError: string | null;
+  isOnline: boolean;
+
   setProjectName: (name: string) => void;
   setSyncStatus: (status: SyncStatus) => void;
   toggleLeftPanel: () => void;
   toggleRightPanel: () => void;
   setActiveRightTab: (tab: RightPanelTab) => void;
   toggleTheme: () => void;
+
+  setProjects: (projects: ProjectSummary[]) => void;
+  setActiveProject: (project: { id: string; name: string; updatedAt: string }) => void;
+  setDirty: (isDirty: boolean) => void;
+  setSaving: (isSaving: boolean) => void;
+  setSaved: (savedAt: string) => void;
+  setSaveError: (saveError: string | null) => void;
+  setOnline: (isOnline: boolean) => void;
 };
 
 function updateUiPreferences(
@@ -74,13 +97,20 @@ function updateUiPreferences(
   set({ uiPreferences });
 }
 
-/** Owns project metadata, guest/auth mode, sync state, and UI preferences. */
+/** Owns project metadata, guest/auth mode, sync and save state, and UI preferences. */
 export const useProjectStore = create<ProjectStoreState>()((set, get) => ({
   projectId: crypto.randomUUID(),
   projectName: "Untitled design",
   mode: "guest",
   syncStatus: "local_only",
   uiPreferences: readUiPreferences(),
+
+  projects: [],
+  isDirty: false,
+  isSaving: false,
+  lastSavedAt: null,
+  saveError: null,
+  isOnline: true,
 
   setProjectName: (projectName) => {
     set({ projectName });
@@ -106,5 +136,27 @@ export const useProjectStore = create<ProjectStoreState>()((set, get) => ({
     updateUiPreferences(get, set, {
       theme: get().uiPreferences.theme === "dark" ? "light" : "dark",
     });
+  },
+
+  setProjects: (projects) => {
+    set({ projects });
+  },
+  setActiveProject: ({ id, name, updatedAt }) => {
+    set({ projectId: id, projectName: name, isDirty: false, lastSavedAt: updatedAt });
+  },
+  setDirty: (isDirty) => {
+    set({ isDirty });
+  },
+  setSaving: (isSaving) => {
+    set({ isSaving });
+  },
+  setSaved: (savedAt) => {
+    set({ isDirty: false, isSaving: false, lastSavedAt: savedAt, saveError: null });
+  },
+  setSaveError: (saveError) => {
+    set({ saveError, isSaving: false });
+  },
+  setOnline: (isOnline) => {
+    set({ isOnline });
   },
 }));

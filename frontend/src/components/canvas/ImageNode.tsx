@@ -3,36 +3,37 @@ import { memo, useMemo } from "react";
 
 import { NodeHandles } from "@/components/canvas/NodeHandles";
 import { RoughSvg } from "@/components/canvas/RoughSvg";
+import { SelectionOutline } from "@/components/canvas/SelectionOutline";
 import { roughRoundedRectanglePaths } from "@/engine/rough";
+import { useImageUrl } from "@/hooks/useImageUrl";
+import { RESIZE_HANDLE_CLASSNAME, RESIZE_LINE_CLASSNAME } from "@/lib/canvasVisuals";
 import { ROUGH_STROKE_WIDTH } from "@/lib/constants";
-import { getImageUrl } from "@/services/imageRegistry";
 import { useCanvasStore } from "@/stores/canvasStore";
+import type { ImageNode as ImageNodeModel } from "@/types/canvas";
 
 export const ImageNode = memo(function ImageNode({ id, selected }: NodeProps) {
   const node = useCanvasStore((state) => state.nodes.find((candidate) => candidate.id === id));
+  if (!node || node.type !== "image") return null;
+  return <ImageNodeBody node={node} selected={Boolean(selected)} />;
+});
+
+function ImageNodeBody({ node, selected }: { node: ImageNodeModel; selected: boolean }) {
   const beginHistory = useCanvasStore((state) => state.beginHistory);
   const commitHistory = useCanvasStore((state) => state.commitHistory);
+  const imageUrl = useImageUrl(node.imageId);
 
   const paths = useMemo(
     () =>
-      node?.type === "image"
-        ? roughRoundedRectanglePaths(node.width, node.height, 8, {
-            seed: node.id,
-            strokeWidth: ROUGH_STROKE_WIDTH,
-          })
-        : [],
-    [node?.id, node?.type, node?.width, node?.height],
+      roughRoundedRectanglePaths(node.width, node.height, 8, {
+        seed: node.id,
+        strokeWidth: ROUGH_STROKE_WIDTH,
+      }),
+    [node.width, node.height, node.id],
   );
-
-  if (!node || node.type !== "image") return null;
-
-  const imageUrl = getImageUrl(node.imageId);
 
   return (
     <div className="group relative h-full w-full">
-      {selected ? (
-        <div className="pointer-events-none absolute -inset-1.5 rounded-xl border-2 border-dashed border-accent" />
-      ) : null}
+      <SelectionOutline selected={selected} />
       <div className="absolute inset-0 overflow-hidden rounded-lg bg-node-surface shadow-sm">
         {imageUrl ? (
           <img
@@ -42,7 +43,7 @@ export const ImageNode = memo(function ImageNode({ id, selected }: NodeProps) {
             draggable={false}
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center font-hand text-[16px] text-text-muted">
+          <div className="flex h-full w-full items-center justify-center text-diagram-sm text-text-muted">
             Image unavailable
           </div>
         )}
@@ -55,11 +56,11 @@ export const ImageNode = memo(function ImageNode({ id, selected }: NodeProps) {
           isVisible
           onResizeStart={beginHistory}
           onResizeEnd={commitHistory}
-          lineClassName="!border-accent !border-dashed"
-          handleClassName="!h-2.5 !w-2.5 !rounded-xs !border !border-accent !bg-surface"
+          lineClassName={RESIZE_LINE_CLASSNAME}
+          handleClassName={RESIZE_HANDLE_CLASSNAME}
         />
       ) : null}
-      <NodeHandles />
+      <NodeHandles visible={selected} />
     </div>
   );
-});
+}

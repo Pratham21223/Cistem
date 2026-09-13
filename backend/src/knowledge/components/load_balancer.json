@@ -1,0 +1,32 @@
+{
+  "type": "load_balancer",
+  "name": "Load Balancer",
+  "category": "networking",
+  "purpose": [
+    "traffic distribution",
+    "health checks",
+    "TLS termination"
+  ],
+  "characteristics": {
+    "throughput": "high",
+    "availability": "high",
+    "state": "routing layer"
+  },
+  "tradeoffs": [
+    "extra network hop",
+    "configuration and certificate management"
+  ],
+  "alternatives": [
+    "API gateway",
+    "reverse proxy",
+    "managed load balancers"
+  ],
+  "common_patterns": [
+    "round robin",
+    "least connections",
+    "active health checks"
+  ],
+  "anti_patterns": [
+    "multiple app instances with no load balancing layer"
+  ]
+}

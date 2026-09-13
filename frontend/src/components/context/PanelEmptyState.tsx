@@ -32,25 +32,25 @@ export function PanelEmptyState({
   const tile = TILE_TONES[tone];
 
   return (
-    <div className="flex flex-col items-center px-6 py-12 text-center">
-      <div className="relative mb-1 h-14 w-16" aria-hidden>
+    <div className="flex flex-col items-center px-5 py-10 text-center">
+      <div className="relative mb-2 h-14 w-16" aria-hidden>
         <span
           className={cn(
-            "absolute left-0 top-1.5 h-11 w-11 -rotate-6 rounded-xl border border-border",
+            "absolute left-0 top-1.5 h-11 w-11 -rotate-6 rounded-lg border border-border",
             tile.back,
           )}
         />
         <span
           className={cn(
-            "absolute right-0 top-0 grid h-11 w-11 rotate-3 place-items-center rounded-xl shadow-sm",
+            "absolute right-0 top-0 grid h-11 w-11 rotate-3 place-items-center rounded-lg shadow-xs",
             tile.front,
           )}
         >
           <Icon size={22} strokeWidth={1.75} />
         </span>
       </div>
-      <h3 className="text-display leading-tight text-text-primary">{title}</h3>
-      <div className="mt-2 max-w-[30ch] text-body text-text-secondary">{children}</div>
+      <h3 className="text-panel-title text-text-primary">{title}</h3>
+      <div className="mt-2 max-w-[32ch] text-body text-text-secondary">{children}</div>
     </div>
   );
 }

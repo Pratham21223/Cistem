@@ -3,8 +3,10 @@ import { memo, useMemo } from "react";
 
 import { NodeHandles } from "@/components/canvas/NodeHandles";
 import { RoughSvg } from "@/components/canvas/RoughSvg";
+import { SelectionOutline } from "@/components/canvas/SelectionOutline";
 import { roughEllipsePaths, roughRoundedRectanglePaths } from "@/engine/rough";
 import { ROUGH_STROKE_WIDTH } from "@/lib/constants";
+import { RESIZE_HANDLE_CLASSNAME, RESIZE_LINE_CLASSNAME } from "@/lib/canvasVisuals";
 import { cn } from "@/lib/utils";
 import { useCanvasStore } from "@/stores/canvasStore";
 import type { NoteNode, ShapeNode, TextNode } from "@/types/canvas";
@@ -89,7 +91,7 @@ function CustomNodeBody({ node, selected }: { node: FreeformNode; selected: bool
 
   const editingProps = {
     className:
-      "nodrag nowheel h-full w-full resize-none bg-transparent p-0 font-hand text-[18px] leading-snug text-text-primary placeholder:text-text-faint focus:outline-none",
+      "nodrag nowheel h-full w-full resize-none bg-transparent p-0 text-diagram-md text-text-primary placeholder:text-text-faint focus:outline-none",
     autoFocus: true,
     "aria-label": "Edit text",
     onBlur: (event: React.FocusEvent<HTMLTextAreaElement>) => finishEditing(event.target.value),
@@ -106,22 +108,16 @@ function CustomNodeBody({ node, selected }: { node: FreeformNode; selected: bool
     },
   };
 
-  const selectionOutline = selected ? (
-    <div
-      className={cn(
-        "pointer-events-none absolute -inset-1.5 border-2 border-dashed border-accent",
-        node.type === "shape" && node.shape === "ellipse" ? "rounded-full" : "rounded-xl",
-      )}
-    />
-  ) : null;
-
   if (node.type === "shape") {
     return (
       <div
         className="group relative h-full w-full"
         onDoubleClick={(event) => event.stopPropagation()}
       >
-        {selectionOutline}
+        <SelectionOutline
+          selected={selected}
+          shape={node.shape === "ellipse" ? "ellipse" : "rect"}
+        />
         <div
           className={cn(
             "absolute inset-0 bg-pastel-blue",
@@ -136,11 +132,11 @@ function CustomNodeBody({ node, selected }: { node: FreeformNode; selected: bool
             isVisible
             onResizeStart={beginHistory}
             onResizeEnd={commitHistory}
-            lineClassName="!border-accent !border-dashed"
-            handleClassName="!h-2.5 !w-2.5 !rounded-xs !border !border-accent !bg-surface"
+            lineClassName={RESIZE_LINE_CLASSNAME}
+            handleClassName={RESIZE_HANDLE_CLASSNAME}
           />
         ) : null}
-        <NodeHandles />
+        <NodeHandles visible={selected} />
       </div>
     );
   }
@@ -154,7 +150,7 @@ function CustomNodeBody({ node, selected }: { node: FreeformNode; selected: bool
           if (!isEditing) startEditing();
         }}
       >
-        {selectionOutline}
+        <SelectionOutline selected={selected} />
         <div className="absolute inset-0 rounded-md bg-pastel-yellow shadow-xs" />
         <RoughSvg width={node.width} height={node.height} paths={paths} className="stroke-stroke" />
         {selected ? (
@@ -164,20 +160,20 @@ function CustomNodeBody({ node, selected }: { node: FreeformNode; selected: bool
             isVisible
             onResizeStart={beginHistory}
             onResizeEnd={commitHistory}
-            lineClassName="!border-accent !border-dashed"
-            handleClassName="!h-2.5 !w-2.5 !rounded-xs !border !border-accent !bg-surface"
+            lineClassName={RESIZE_LINE_CLASSNAME}
+            handleClassName={RESIZE_HANDLE_CLASSNAME}
           />
         ) : null}
         <div className="relative z-10 h-full w-full p-3">
           {isEditing ? (
             <textarea defaultValue={textContent} {...editingProps} />
           ) : (
-            <p className="whitespace-pre-wrap font-hand text-[18px] leading-snug text-ink">
+            <p className="whitespace-pre-wrap text-diagram-md text-ink">
               {textContent || <span className="text-ink-muted">Double-click to write</span>}
             </p>
           )}
         </div>
-        <NodeHandles />
+        <NodeHandles visible={selected} />
       </div>
     );
   }
@@ -192,17 +188,17 @@ function CustomNodeBody({ node, selected }: { node: FreeformNode; selected: bool
         if (!isEditing) startEditing();
       }}
     >
-      {selectionOutline}
+      <SelectionOutline selected={selected} />
       <div className="relative z-10 h-full w-full">
         {isEditing ? (
           <textarea defaultValue={textContent} {...editingProps} />
         ) : (
           <p
             className={cn(
-              "whitespace-pre-wrap font-hand leading-snug",
+              "whitespace-pre-wrap leading-snug",
               isLabel
-                ? "text-[16px] font-medium text-text-secondary"
-                : "text-[19px] text-text-primary",
+                ? "text-diagram-sm font-medium text-text-secondary"
+                : "text-diagram-lg text-text-primary",
             )}
           >
             {textContent || (
@@ -211,7 +207,7 @@ function CustomNodeBody({ node, selected }: { node: FreeformNode; selected: bool
           </p>
         )}
       </div>
-      <NodeHandles />
+      <NodeHandles visible={selected} />
     </div>
   );
 }

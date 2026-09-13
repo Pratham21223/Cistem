@@ -46,10 +46,10 @@ export function ContextOverview() {
   ].filter((signal) => signal.value > 0);
 
   return (
-    <div className="space-y-4 p-4">
-      <section className="rounded-2xl border border-border bg-surface-secondary/60 p-4">
+    <div className="p-3">
+      <section className="rounded-lg border border-border bg-surface-secondary/50 p-3">
         <h3 className="text-eyebrow text-text-muted">Signals collected</h3>
-        <ul className="mt-3 space-y-2.5">
+        <ul className="mt-2.5 space-y-2">
           {signals.map((signal) => (
             <li key={signal.label} className="flex items-center gap-2.5">
               <span className={cn("h-1.5 w-1.5 rounded-full", signal.tone)} aria-hidden />

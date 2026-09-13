@@ -2,6 +2,12 @@ import type { CanvasNodeType, CanvasTool } from "@/types/canvas";
 
 export const HISTORY_LIMIT = 100;
 
+/** Canvas→graph projection batches nearby semantic edits (`build-plan.md` §7). */
+export const ANALYSIS_DEBOUNCE_MS = 300;
+
+/** Local autosave debounce (`build-plan.md` §8). */
+export const AUTOSAVE_DEBOUNCE_MS = 300;
+
 export const ROUGH_STROKE_WIDTH = 1.6;
 
 export const GRID_SIZE = 16;

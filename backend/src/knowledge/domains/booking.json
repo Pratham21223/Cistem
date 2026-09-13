@@ -1,0 +1,106 @@
+{
+  "domain": "booking",
+  "name": "Booking",
+  "summary": "Calendar availability, reservations, and confirmations.",
+  "keywords": [
+    "booking",
+    "reservation",
+    "scheduling",
+    "appointments"
+  ],
+  "requirements": [
+    {
+      "kind": "consistency",
+      "value": {
+        "model": "strong"
+      },
+      "original_text": "No double bookings"
+    },
+    {
+      "kind": "availability",
+      "value": {
+        "target": "99.9%"
+      },
+      "original_text": "Reliable confirmations"
+    }
+  ],
+  "components": [
+    {
+      "key": "lb",
+      "type": "load_balancer",
+      "label": "Load Balancer"
+    },
+    {
+      "key": "api",
+      "type": "api_service",
+      "label": "Booking API"
+    },
+    {
+      "key": "db",
+      "type": "postgresql",
+      "label": "Reservations"
+    },
+    {
+      "key": "cache",
+      "type": "redis",
+      "label": "Availability Cache"
+    },
+    {
+      "key": "queue",
+      "type": "queue",
+      "label": "Confirmation Queue"
+    },
+    {
+      "key": "worker",
+      "type": "worker",
+      "label": "Confirmation Worker"
+    },
+    {
+      "key": "notify",
+      "type": "notification_service",
+      "label": "Emails & Reminders"
+    },
+    {
+      "key": "pay",
+      "type": "payment_service",
+      "label": "Deposits"
+    }
+  ],
+  "connections": [
+    {
+      "from": "lb",
+      "to": "api",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "db",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "cache",
+      "type": "data_flow"
+    },
+    {
+      "from": "api",
+      "to": "queue",
+      "type": "event_flow"
+    },
+    {
+      "from": "queue",
+      "to": "worker",
+      "type": "request_flow"
+    },
+    {
+      "from": "worker",
+      "to": "notify",
+      "type": "request_flow"
+    },
+    {
+      "from": "api",
+      "to": "pay",
+      "type": "request_flow"
+    }
+  ]
+}

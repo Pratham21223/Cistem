@@ -1,0 +1,30 @@
+{
+  "type": "cassandra",
+  "name": "Cassandra",
+  "category": "storage",
+  "purpose": [
+    "wide-column storage",
+    "high write throughput",
+    "multi-region scale"
+  ],
+  "characteristics": {
+    "consistency": "tunable eventual",
+    "write": "high",
+    "model": "wide-column"
+  },
+  "tradeoffs": [
+    "query flexibility limited by partition design",
+    "operational expertise required"
+  ],
+  "alternatives": [
+    "DynamoDB",
+    "ScyllaDB",
+    "PostgreSQL at moderate scale"
+  ],
+  "common_patterns": [
+    "partition key design for access patterns"
+  ],
+  "anti_patterns": [
+    "ad-hoc analytical queries on Cassandra"
+  ]
+}

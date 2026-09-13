@@ -1,0 +1,33 @@
+{
+  "type": "kafka",
+  "name": "Kafka",
+  "category": "messaging",
+  "purpose": [
+    "event streaming",
+    "durable event log",
+    "stream processing input"
+  ],
+  "characteristics": {
+    "delivery": "ordered per partition",
+    "retention": "durable log"
+  },
+  "tradeoffs": [
+    "operational complexity",
+    "consumer lag monitoring",
+    "overkill for simple queues"
+  ],
+  "alternatives": [
+    "RabbitMQ",
+    "managed queues",
+    "event bus"
+  ],
+  "common_patterns": [
+    "publish-subscribe",
+    "partitioned consumers",
+    "consumer groups"
+  ],
+  "anti_patterns": [
+    "event stream with no visible consumer",
+    "Kafka for low-volume task queues"
+  ]
+}

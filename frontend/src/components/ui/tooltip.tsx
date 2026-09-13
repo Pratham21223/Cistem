@@ -17,7 +17,7 @@ export function TooltipContent({
       <TooltipPrimitive.Content
         sideOffset={sideOffset}
         className={cn(
-          "z-40 flex items-center gap-1.5 rounded-lg border border-border bg-surface px-2 py-1 text-caption font-medium text-text-primary shadow-md animate-in fade-in-0 zoom-in-95",
+          "z-50 flex items-center gap-1.5 rounded-md border border-border bg-surface px-2 py-1 text-caption font-medium text-text-primary shadow-md animate-in fade-in-0 zoom-in-95",
           className,
         )}
         {...props}
@@ -28,7 +28,7 @@ export function TooltipContent({
 
 export function ShortcutHint({ children }: { children: string }) {
   return (
-    <kbd className="rounded-xs border border-border bg-surface-secondary px-1 py-px font-mono text-[10px] text-text-muted">
+    <kbd className="rounded-xs border border-border bg-surface-secondary px-1.5 py-px font-mono text-micro text-text-muted">
       {children}
     </kbd>
   );

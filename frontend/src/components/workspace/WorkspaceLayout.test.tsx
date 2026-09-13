@@ -53,21 +53,22 @@ describe("WorkspaceLayout", () => {
     expect(screen.getByText("Components")).toBeInTheDocument();
     expect(screen.getByText("Understanding")).toBeInTheDocument();
     expect(screen.getByRole("toolbar", { name: "Canvas tools" })).toBeInTheDocument();
-    expect(screen.getByRole("toolbar", { name: "Zoom controls" })).toBeInTheDocument();
+    expect(screen.getByRole("toolbar", { name: "Canvas controls" })).toBeInTheDocument();
     expect(screen.getByText("Start designing")).toBeInTheDocument();
   });
 
-  it("teases the component palette when a category is expanded", async () => {
+  it("renders the component palette and collapses categories", async () => {
     const user = userEvent.setup();
     render(<WorkspaceLayout />);
 
-    const networking = screen.getByRole("button", { name: /Networking/ });
-    expect(networking).toHaveAttribute("aria-expanded", "false");
+    const networking = await screen.findByRole("button", { name: /Networking/ });
+    expect(networking).toHaveAttribute("aria-expanded", "true");
+    expect(await screen.findByText("Load Balancer")).toBeInTheDocument();
 
     await user.click(networking);
 
-    expect(networking).toHaveAttribute("aria-expanded", "true");
-    expect(screen.getByText("Palette loads in Phase P2")).toBeInTheDocument();
+    expect(networking).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByText("Load Balancer")).not.toBeInTheDocument();
   });
 
   it("shows collected signals in the context panel once the canvas has nodes", () => {
@@ -107,7 +108,7 @@ describe("WorkspaceLayout", () => {
     expect(rectangleTool).toHaveAttribute("aria-pressed", "true");
   });
 
-  it("enables undo once history exists and undoes with the top bar control", async () => {
+  it("enables undo once history exists and undoes with the canvas control", async () => {
     const user = userEvent.setup();
     render(<WorkspaceLayout />);
 

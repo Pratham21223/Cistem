@@ -1,0 +1,29 @@
+{
+  "type": "worker",
+  "name": "Worker",
+  "category": "compute",
+  "purpose": [
+    "background jobs",
+    "async processing",
+    "queue consumption"
+  ],
+  "characteristics": {
+    "execution": "async",
+    "scaling": "queue depth driven"
+  },
+  "tradeoffs": [
+    "at-least-once delivery semantics",
+    "retry and dead-letter handling"
+  ],
+  "alternatives": [
+    "serverless functions",
+    "managed job runners"
+  ],
+  "common_patterns": [
+    "queue consumer",
+    "idempotent job handlers"
+  ],
+  "anti_patterns": [
+    "long-running work inside synchronous request paths"
+  ]
+}

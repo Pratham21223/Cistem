@@ -1,5 +1,10 @@
 import type { ComponentCategory, Provenance, RelationshipType } from "@/types/architecture";
 
+/** One resizer recipe for every node type (React Flow needs the `!` overrides). */
+export const RESIZE_HANDLE_CLASSNAME =
+  "!h-2.5 !w-2.5 !rounded-xs !border-2 !border-accent !bg-surface";
+export const RESIZE_LINE_CLASSNAME = "!border-accent";
+
 export const CATEGORY_ACCENT_CLASS: Record<ComponentCategory, string> = {
   networking: "text-cat-networking",
   compute: "text-cat-compute",
@@ -61,6 +66,15 @@ export const EDGE_STROKE_CLASS: Record<RelationshipType, string> = {
   replication: "stroke-edge-replication",
   dependency: "stroke-edge",
   annotation: "stroke-text-faint",
+};
+
+export const RELATIONSHIP_LABELS: Record<RelationshipType, string> = {
+  request_flow: "Request flow",
+  data_flow: "Data flow",
+  event_flow: "Event flow",
+  replication: "Replication",
+  dependency: "Dependency",
+  annotation: "Annotation",
 };
 
 export const EDGE_DASH: Record<RelationshipType, number[] | undefined> = {

@@ -1,15 +1,17 @@
 import { ReactFlowProvider, useReactFlow } from "@xyflow/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { ArchitectureCanvas } from "@/components/canvas/ArchitectureCanvas";
 import {
   CanvasContextMenu,
   type CanvasContextMenuState,
 } from "@/components/canvas/CanvasContextMenu";
+import { CanvasControls } from "@/components/canvas/CanvasControls";
 import { CanvasToolbar } from "@/components/canvas/CanvasToolbar";
 import { CommentThread } from "@/components/canvas/CommentThread";
 import { RoughSvg } from "@/components/canvas/RoughSvg";
 import { getAbsolutePosition } from "@/engine/canvasGraph";
+import { createSemanticNode } from "@/engine/componentPlacement";
 import {
   roughCurvePaths,
   roughEllipsePaths,
@@ -17,6 +19,8 @@ import {
   roughRoundedRectanglePaths,
   type RoughPath,
 } from "@/engine/rough";
+import { SEMANTIC_NODE_SIZE } from "@/lib/constants";
+import { getKnowledgeComponent } from "@/services/knowledge";
 import { useCanvasStore } from "@/stores/canvasStore";
 
 export function CanvasArea() {
@@ -29,9 +33,13 @@ export function CanvasArea() {
 
 function CanvasWorkspace() {
   const nodes = useCanvasStore((state) => state.nodes);
+  const placementRequest = useCanvasStore((state) => state.placementRequest);
+  const clearPlacementRequest = useCanvasStore((state) => state.clearPlacementRequest);
+  const addNode = useCanvasStore((state) => state.addNode);
   const [menu, setMenu] = useState<CanvasContextMenuState | null>(null);
   const [commentTargetId, setCommentTargetId] = useState<string | null>(null);
-  const { flowToScreenPosition } = useReactFlow();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { flowToScreenPosition, screenToFlowPosition } = useReactFlow();
 
   const commentPosition = useMemo(() => {
     if (!commentTargetId) return null;
@@ -42,19 +50,44 @@ function CanvasWorkspace() {
     return flowToScreenPosition({ x: absolute.x + node.width + 16, y: absolute.y });
   }, [commentTargetId, nodes, flowToScreenPosition]);
 
+  // Keyboard / click placement from the component library lands at the viewport center.
+  useEffect(() => {
+    if (!placementRequest) return;
+    clearPlacementRequest();
+    const component = getKnowledgeComponent(placementRequest.componentType);
+    const bounds = containerRef.current?.getBoundingClientRect();
+    if (!component || !bounds) return;
+    const center = screenToFlowPosition({
+      x: bounds.left + bounds.width / 2,
+      y: bounds.top + bounds.height / 2,
+    });
+    addNode(
+      createSemanticNode(component, {
+        x: center.x - SEMANTIC_NODE_SIZE.width / 2,
+        y: center.y - SEMANTIC_NODE_SIZE.height / 2,
+      }),
+    );
+  }, [placementRequest, clearPlacementRequest, addNode, screenToFlowPosition]);
+
   return (
-    <div className="relative h-full min-h-0 w-full">
+    <div ref={containerRef} className="relative h-full min-h-0 w-full">
       <ArchitectureCanvas
         onNodeContextMenu={(event, nodeId) =>
-          setMenu({ x: event.clientX, y: event.clientY, nodeId })
+          setMenu({ x: event.clientX, y: event.clientY, nodeId, edgeId: null })
         }
-        onPaneContextMenu={(event) => setMenu({ x: event.clientX, y: event.clientY, nodeId: null })}
+        onEdgeContextMenu={(event, edgeId) =>
+          setMenu({ x: event.clientX, y: event.clientY, nodeId: null, edgeId })
+        }
+        onPaneContextMenu={(event) =>
+          setMenu({ x: event.clientX, y: event.clientY, nodeId: null, edgeId: null })
+        }
         onPaneClick={() => {
           setMenu(null);
           setCommentTargetId(null);
         }}
       />
       <CanvasToolbar />
+      <CanvasControls />
 
       {nodes.length === 0 ? <EmptyCanvasHint /> : null}
 
@@ -81,6 +114,14 @@ function CanvasWorkspace() {
 const CARD_WIDTH = 384;
 const CARD_HEIGHT = 176;
 
+function KeyHint({ children }: { children: string }) {
+  return (
+    <kbd className="rounded-xs border border-border bg-surface-secondary px-1 py-px font-mono text-micro text-text-primary">
+      {children}
+    </kbd>
+  );
+}
+
 function EmptyCanvasHint() {
   const cardPaths = useMemo(
     () =>
@@ -98,7 +139,7 @@ function EmptyCanvasHint() {
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="relative" style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}>
           <PointerSquiggle />
-          <div className="absolute inset-0 rounded-3xl bg-surface/90 shadow-sm backdrop-blur-sm" />
+          <div className="absolute inset-0 rounded-xl bg-surface/95 shadow-lg backdrop-blur-xs" />
           <RoughSvg
             width={CARD_WIDTH}
             height={CARD_HEIGHT}
@@ -108,10 +149,8 @@ function EmptyCanvasHint() {
           <div className="relative z-10 flex h-full flex-col items-center justify-center px-8 text-center">
             <h2 className="text-display leading-tight text-text-primary">Start designing</h2>
             <p className="mt-2 text-body text-text-secondary">
-              Press <span className="font-mono text-caption text-text-primary">P</span> to draw,{" "}
-              <span className="font-mono text-caption text-text-primary">N</span> for a sticky note,
-              or <span className="font-mono text-caption text-text-primary">T</span> to type. Paste
-              a screenshot to place it on the canvas.
+              Press <KeyHint>P</KeyHint> to draw, <KeyHint>N</KeyHint> for a sticky note, or{" "}
+              <KeyHint>T</KeyHint> to type. Paste a screenshot to place it on the canvas.
             </p>
           </div>
         </div>

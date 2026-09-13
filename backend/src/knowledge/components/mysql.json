@@ -1,0 +1,28 @@
+{
+  "type": "mysql",
+  "name": "MySQL",
+  "category": "storage",
+  "purpose": [
+    "transactional relational data",
+    "wide ecosystem"
+  ],
+  "characteristics": {
+    "consistency": "strong",
+    "durability": "high",
+    "model": "relational"
+  },
+  "tradeoffs": [
+    "replication topology management",
+    "schema migration discipline needed"
+  ],
+  "alternatives": [
+    "PostgreSQL"
+  ],
+  "common_patterns": [
+    "primary plus replicas",
+    "connection pooling"
+  ],
+  "anti_patterns": [
+    "mixing engines without a clear reason"
+  ]
+}

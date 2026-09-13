@@ -1,0 +1,30 @@
+{
+  "type": "api_service",
+  "name": "API Service",
+  "category": "compute",
+  "purpose": [
+    "request handling",
+    "business logic",
+    "API surface"
+  ],
+  "characteristics": {
+    "latency": "low",
+    "scaling": "horizontal",
+    "state": "stateless ideally"
+  },
+  "tradeoffs": [
+    "stateful instances limit horizontal scaling",
+    "deploy coordination"
+  ],
+  "alternatives": [
+    "serverless functions",
+    "modular monolith routes"
+  ],
+  "common_patterns": [
+    "stateless request handling",
+    "connection pooling"
+  ],
+  "anti_patterns": [
+    "holding sessions in instance memory with multiple replicas"
+  ]
+}

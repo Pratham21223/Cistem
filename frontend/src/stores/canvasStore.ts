@@ -64,8 +64,13 @@ export type CanvasStoreState = {
 
   addEdge: (edge: CanvasEdge) => void;
   updateEdge: (id: string, updater: (edge: CanvasEdge) => CanvasEdge) => void;
+  setEdgeType: (id: string, type: CanvasEdge["type"]) => void;
   removeEdges: (ids: string[]) => void;
   applyEdgeChanges: (changes: EdgeChange<CanvasEdge>[]) => void;
+
+  placementRequest: { componentType: string } | null;
+  requestComponentPlacement: (componentType: string) => void;
+  clearPlacementRequest: () => void;
 
   addStroke: (stroke: Stroke) => void;
   removeStrokes: (ids: string[]) => void;
@@ -338,6 +343,27 @@ export const useCanvasStore = create<CanvasStoreState>()((set, get) => ({
     }));
   },
 
+  setEdgeType: (id, type) => {
+    const state = get();
+    const target = state.edges.find((edge) => edge.id === id);
+    if (!target || target.type === type) return;
+    set({
+      past: [...state.past, snapshotOf(state)].slice(-HISTORY_LIMIT),
+      future: [],
+      edges: state.edges.map((edge) => (edge.id === id ? { ...edge, type } : edge)),
+    });
+  },
+
+  placementRequest: null,
+
+  requestComponentPlacement: (componentType) => {
+    set({ placementRequest: { componentType } });
+  },
+
+  clearPlacementRequest: () => {
+    set({ placementRequest: null });
+  },
+
   removeEdges: (ids) => {
     if (ids.length === 0) return;
     const state = get();
@@ -586,6 +612,7 @@ export const useCanvasStore = create<CanvasStoreState>()((set, get) => ({
       pendingSnapshot: null,
       clipboard: null,
       editingNodeId: null,
+      placementRequest: null,
     });
   },
 }));

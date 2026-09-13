@@ -1,0 +1,30 @@
+{
+  "type": "dynamodb",
+  "name": "DynamoDB",
+  "category": "storage",
+  "purpose": [
+    "managed key-value storage",
+    "serverless-scale workloads"
+  ],
+  "characteristics": {
+    "consistency": "tunable",
+    "scaling": "managed",
+    "model": "key-value/document"
+  },
+  "tradeoffs": [
+    "access-pattern-driven design",
+    "vendor lock-in"
+  ],
+  "alternatives": [
+    "Cassandra",
+    "MongoDB",
+    "PostgreSQL"
+  ],
+  "common_patterns": [
+    "single-table design",
+    "streams for change capture"
+  ],
+  "anti_patterns": [
+    "full table scans in hot request paths"
+  ]
+}

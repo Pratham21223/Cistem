@@ -1,0 +1,29 @@
+{
+  "type": "dns",
+  "name": "DNS",
+  "category": "networking",
+  "purpose": [
+    "name resolution",
+    "service discovery"
+  ],
+  "characteristics": {
+    "availability": "critical",
+    "latency": "low",
+    "state": "distributed"
+  },
+  "tradeoffs": [
+    "TTL tuning: fast failover vs extra query load",
+    "propagation delay during changes"
+  ],
+  "alternatives": [
+    "managed DNS providers",
+    "service discovery registries"
+  ],
+  "common_patterns": [
+    "weighted routing",
+    "health-check based failover"
+  ],
+  "anti_patterns": [
+    "single DNS provider with no failover plan"
+  ]
+}

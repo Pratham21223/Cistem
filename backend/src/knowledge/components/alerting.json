@@ -1,0 +1,28 @@
+{
+  "type": "alerting",
+  "name": "Alerting",
+  "category": "observability",
+  "purpose": [
+    "incident notification",
+    "escalation",
+    "on-call routing"
+  ],
+  "characteristics": {
+    "signal": "actionable only",
+    "routing": "severity-based"
+  },
+  "tradeoffs": [
+    "alert fatigue",
+    "missed alerts from poor thresholds"
+  ],
+  "alternatives": [
+    "managed on-call platforms"
+  ],
+  "common_patterns": [
+    "actionable alerts with runbooks",
+    "severity tiers"
+  ],
+  "anti_patterns": [
+    "paging humans for non-actionable thresholds"
+  ]
+}

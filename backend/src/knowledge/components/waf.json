@@ -1,0 +1,29 @@
+{
+  "type": "waf",
+  "name": "WAF",
+  "category": "security",
+  "purpose": [
+    "attack filtering",
+    "bot mitigation",
+    "OWASP rule enforcement"
+  ],
+  "characteristics": {
+    "protection": "edge",
+    "tuning": "rule-based"
+  },
+  "tradeoffs": [
+    "false positives can block real users",
+    "rule maintenance effort"
+  ],
+  "alternatives": [
+    "managed edge WAF",
+    "API gateway security policies"
+  ],
+  "common_patterns": [
+    "OWASP core rule set",
+    "staged rule rollout"
+  ],
+  "anti_patterns": [
+    "blocking mode enabled without a staging window"
+  ]
+}

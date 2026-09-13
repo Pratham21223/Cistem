@@ -21,6 +21,8 @@ export const componentCategorySchema = z.enum([
   "unknown",
 ]);
 
+export type ComponentCategory = z.infer<typeof componentCategorySchema>;
+
 export const relationshipTypeSchema = z.enum([
   "request_flow",
   "data_flow",
@@ -99,3 +101,11 @@ export const architectureGraphSchema = z.strictObject({
   requirements: z.array(requirementSchema).max(500),
   assumptions: z.array(assumptionSchema).max(500),
 });
+
+export type ArchitectureGraph = z.infer<typeof architectureGraphSchema>;
+export type ArchitectureComponent = z.infer<typeof architectureComponentSchema>;
+export type ArchitectureConnection = z.infer<typeof architectureConnectionSchema>;
+export type Requirement = z.infer<typeof requirementSchema>;
+export type RequirementKind = z.infer<typeof requirementKindSchema>;
+export type RelationshipType = z.infer<typeof relationshipTypeSchema>;
+export type Provenance = z.infer<typeof provenanceSchema>;

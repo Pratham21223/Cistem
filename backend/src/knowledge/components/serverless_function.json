@@ -1,0 +1,31 @@
+{
+  "type": "serverless_function",
+  "name": "Serverless Function",
+  "category": "compute",
+  "purpose": [
+    "event-driven compute",
+    "auto-scaling",
+    "spiky workloads"
+  ],
+  "characteristics": {
+    "scaling": "automatic",
+    "cost": "per invocation",
+    "startup": "cold starts possible"
+  },
+  "tradeoffs": [
+    "cold start latency",
+    "execution time and payload limits",
+    "vendor lock-in"
+  ],
+  "alternatives": [
+    "containers",
+    "managed job runners"
+  ],
+  "common_patterns": [
+    "event handlers",
+    "scheduled jobs"
+  ],
+  "anti_patterns": [
+    "chatty function-to-function call chains"
+  ]
+}

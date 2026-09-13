@@ -1,0 +1,29 @@
+{
+  "type": "identity_provider",
+  "name": "Identity Provider",
+  "category": "security",
+  "purpose": [
+    "SSO",
+    "identity federation",
+    "token issuance"
+  ],
+  "characteristics": {
+    "standard": "OAuth/OIDC",
+    "trust": "central"
+  },
+  "tradeoffs": [
+    "external dependency",
+    "vendor lock-in"
+  ],
+  "alternatives": [
+    "managed auth services",
+    "authentication service"
+  ],
+  "common_patterns": [
+    "OIDC discovery",
+    "JWT validation at the API edge"
+  ],
+  "anti_patterns": [
+    "self-managed identity infrastructure without operational expertise"
+  ]
+}

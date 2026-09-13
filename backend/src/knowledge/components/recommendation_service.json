@@ -1,0 +1,29 @@
+{
+  "type": "recommendation_service",
+  "name": "Recommendation Service",
+  "category": "services",
+  "purpose": [
+    "personalization",
+    "ranking",
+    "candidate generation"
+  ],
+  "characteristics": {
+    "compute": "heavy",
+    "data": "behavioral signals"
+  },
+  "tradeoffs": [
+    "compute cost",
+    "cold-start quality",
+    "needs sufficient data volume"
+  ],
+  "alternatives": [
+    "simple heuristic ranking first"
+  ],
+  "common_patterns": [
+    "offline training plus online serving",
+    "fallback to popular items"
+  ],
+  "anti_patterns": [
+    "machine learning before there is data volume to learn from"
+  ]
+}

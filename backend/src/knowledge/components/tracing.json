@@ -1,0 +1,28 @@
+{
+  "type": "tracing",
+  "name": "Tracing",
+  "category": "observability",
+  "purpose": [
+    "distributed tracing",
+    "latency attribution",
+    "dependency mapping"
+  ],
+  "characteristics": {
+    "sampling": "required at scale",
+    "overhead": "per-span"
+  },
+  "tradeoffs": [
+    "instrumentation effort",
+    "sampling tradeoffs"
+  ],
+  "alternatives": [
+    "managed APM services"
+  ],
+  "common_patterns": [
+    "context propagation",
+    "tail-based sampling"
+  ],
+  "anti_patterns": [
+    "100% sampling on every span in production"
+  ]
+}

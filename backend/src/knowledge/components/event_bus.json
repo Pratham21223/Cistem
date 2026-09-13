@@ -1,0 +1,30 @@
+{
+  "type": "event_bus",
+  "name": "Event Bus",
+  "category": "messaging",
+  "purpose": [
+    "domain events",
+    "service decoupling",
+    "fan-out notifications"
+  ],
+  "characteristics": {
+    "coupling": "loose",
+    "consistency": "eventual"
+  },
+  "tradeoffs": [
+    "eventual consistency is harder to reason about",
+    "debugging event chains"
+  ],
+  "alternatives": [
+    "Kafka",
+    "RabbitMQ",
+    "in-process domain events"
+  ],
+  "common_patterns": [
+    "publish-subscribe",
+    "event schemas and versioning"
+  ],
+  "anti_patterns": [
+    "using the event bus as a system of record"
+  ]
+}

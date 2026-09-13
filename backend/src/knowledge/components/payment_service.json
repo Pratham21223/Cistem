@@ -1,0 +1,29 @@
+{
+  "type": "payment_service",
+  "name": "Payment Service",
+  "category": "services",
+  "purpose": [
+    "payments",
+    "billing",
+    "subscriptions"
+  ],
+  "characteristics": {
+    "correctness": "critical",
+    "compliance": "PCI scope"
+  },
+  "tradeoffs": [
+    "compliance burden if card data is handled",
+    "idempotency is mandatory"
+  ],
+  "alternatives": [
+    "hosted checkout providers"
+  ],
+  "common_patterns": [
+    "idempotency keys",
+    "provider webhooks",
+    "reconciliation jobs"
+  ],
+  "anti_patterns": [
+    "storing raw card data"
+  ]
+}

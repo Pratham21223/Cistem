@@ -1,0 +1,30 @@
+{
+  "type": "rabbitmq",
+  "name": "RabbitMQ",
+  "category": "messaging",
+  "purpose": [
+    "task queues",
+    "flexible routing",
+    "work distribution"
+  ],
+  "characteristics": {
+    "delivery": "acknowledged",
+    "routing": "exchanges and bindings"
+  },
+  "tradeoffs": [
+    "broker node management",
+    "message backlog handling"
+  ],
+  "alternatives": [
+    "Kafka",
+    "managed queues"
+  ],
+  "common_patterns": [
+    "work queues",
+    "dead-letter queues",
+    "delayed retries"
+  ],
+  "anti_patterns": [
+    "unbounded queues with no backpressure"
+  ]
+}

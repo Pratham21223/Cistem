@@ -1,0 +1,28 @@
+{
+  "type": "metrics",
+  "name": "Metrics",
+  "category": "observability",
+  "purpose": [
+    "time-series measurement",
+    "capacity planning",
+    "performance trends"
+  ],
+  "characteristics": {
+    "data": "time series",
+    "cost": "cardinality sensitive"
+  },
+  "tradeoffs": [
+    "high-cardinality labels multiply cost"
+  ],
+  "alternatives": [
+    "managed metrics services"
+  ],
+  "common_patterns": [
+    "RED method",
+    "USE method",
+    "bounded label sets"
+  ],
+  "anti_patterns": [
+    "unbounded user IDs as metric labels"
+  ]
+}
