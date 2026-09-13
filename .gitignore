@@ -1,0 +1,23 @@
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+prompts/
+.env
+.env.*
+!.env.example
+
+# Prisma generated client (regenerated via `prisma generate`)
+backend/src/generated/
+AGENTS.md
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Logs
+*.log
+npm-debug.log*

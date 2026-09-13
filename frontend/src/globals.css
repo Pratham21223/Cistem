@@ -1,0 +1,336 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* Dark mode is class-based so the theme toggle can override the system preference. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Cistem design tokens — Excalidraw-style hand-drawn system.
+   Values mirror prompts/ui-tokens.md exactly.
+   Changing a token requires editing ui-tokens.md in the same change.
+   ───────────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* Fonts */
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-hand: "Caveat Variable", "Segoe Print", "Comic Sans MS", cursive;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+
+  /* Hand-drawn rendering defaults (rough.js, see library-docs.md §3.3) */
+  --rough-roughness: 1.1;
+  --rough-bowing: 1;
+  --rough-stroke-width: 1.6;
+
+  /* App background (behind panels) */
+  --color-background: #f8f9fa;
+
+  /* Panels, islands, nodes */
+  --color-surface: #ffffff;
+  --color-surface-secondary: #f1f3f5;
+  --color-surface-tertiary: #e9ecef;
+
+  /* Borders (UI chrome only — diagram outlines use --color-stroke) */
+  --color-border: #dee2e6;
+  --color-border-light: #e9ecef;
+  --color-border-strong: #ced4da;
+
+  /* Text on light surfaces */
+  --color-text-primary: #1e1e1e;
+  --color-text-secondary: #495057;
+  --color-text-muted: #6c757d;
+  --color-text-faint: #adb5bd;
+
+  /* Primary accent (Excalidraw violet) */
+  --color-accent: #6965db;
+  --color-accent-hover: #5b57d1;
+  --color-accent-active: #4a46c9;
+  --color-accent-light: #e3e2fe;
+  --color-accent-muted: #f4f3ff;
+  --color-accent-foreground: #ffffff;
+
+  /* Severity: info / suggestion / warning / critical */
+  --color-info: #1971c2;
+  --color-info-light: #d0ebff;
+  --color-info-muted: #e7f5ff;
+  --color-suggestion: #7048e8;
+  --color-suggestion-light: #e5dbff;
+  --color-suggestion-muted: #f3f0ff;
+  --color-warning: #f08c00;
+  --color-warning-light: #ffec99;
+  --color-warning-muted: #fff9db;
+  --color-critical: #e03131;
+  --color-critical-light: #ffc9c9;
+  --color-critical-muted: #fff5f5;
+
+  /* Semantic UI states */
+  --color-success: #2f9e44;
+  --color-success-light: #b2f2bb;
+  --color-error: #e03131;
+  --color-error-light: #ffc9c9;
+
+  /* Excalidraw pastel fill palette (diagram shapes + sticky notes) */
+  --color-pastel-red: #ffc9c9;
+  --color-pastel-green: #b2f2bb;
+  --color-pastel-blue: #a5d8ff;
+  --color-pastel-yellow: #ffec99;
+  --color-pastel-violet: #d0bfff;
+  --color-pastel-orange: #ffd8a8;
+  --color-pastel-teal: #96f2d7;
+  --color-pastel-gray: #e9ecef;
+
+  /* Component category accents (stroke + icon; paired with pastel fills) */
+  --color-cat-networking: #1971c2;
+  --color-cat-compute: #7048e8;
+  --color-cat-storage: #0ca678;
+  --color-cat-messaging: #e8590c;
+  --color-cat-services: #e64980;
+  --color-cat-observability: #f08c00;
+  --color-cat-security: #495057;
+  --color-cat-unknown: #868e96;
+
+  /* Provenance indicators */
+  --color-provenance-explicit: #2f9e44;
+  --color-provenance-inferred: #f08c00;
+  --color-provenance-suggested: #7048e8;
+
+  /* Canvas */
+  --color-canvas: #ffffff;
+  --color-canvas-grid-dot: #e9ecef;
+  --color-canvas-grid-line: #f1f3f5;
+  --color-node-surface: #ffffff;
+  --color-node-border: #ced4da;
+  --color-node-border-selected: #6965db;
+  --color-node-border-related: #f08c00;
+  --color-edge: #1e1e1e;
+  --color-edge-selected: #6965db;
+  --color-edge-event: #e8590c;
+  --color-edge-replication: #7048e8;
+  --color-selection-box: rgb(105 101 219 / 0.1);
+  --color-overlay-scrim: rgb(18 18 18 / 0.45);
+  --color-stroke: #1e1e1e;
+
+  /* Diagram ink — text/graphics on pastel fills stay dark in both themes */
+  --color-ink: #1e1e1e;
+  --color-ink-muted: #5c5f66;
+  --color-ink-faint: #8a8d94;
+
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.06);
+  --shadow-sm: 0 1px 4px rgb(0 0 0 / 0.08);
+  --shadow-md: 0 6px 20px rgb(0 0 0 / 0.12);
+  --shadow-lg: 0 16px 40px rgb(0 0 0 / 0.18);
+
+  /* Motion */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --duration-slow: 240ms;
+}
+
+/* ── Dark theme — overrides the same semantic slots, so every utility flips ── */
+.dark {
+  --color-background: #101013;
+  --color-surface: #1c1c21;
+  --color-surface-secondary: #26262c;
+  --color-surface-tertiary: #303038;
+  --color-border: #2f2f37;
+  --color-border-light: #28282f;
+  --color-border-strong: #4a4a54;
+
+  --color-text-primary: #e9ecef;
+  --color-text-secondary: #ced4da;
+  --color-text-muted: #adb5bd;
+  --color-text-faint: #6c757d;
+
+  --color-accent: #8b87e8;
+  --color-accent-hover: #9a97ee;
+  --color-accent-active: #a8a5f2;
+  --color-accent-light: #2b2a45;
+  --color-accent-muted: #1f1e33;
+  --color-accent-foreground: #ffffff;
+
+  --color-info-light: #1b2a3d;
+  --color-info-muted: #16202e;
+  --color-suggestion-light: #2a2440;
+  --color-suggestion-muted: #211d33;
+  --color-warning-light: #3d2c12;
+  --color-warning-muted: #241a0f;
+  --color-critical-light: #40191c;
+  --color-critical-muted: #2a1416;
+  --color-success-light: #17301f;
+  --color-error-light: #40191c;
+
+  --color-canvas: #101013;
+  --color-canvas-grid-dot: #30303a;
+  --color-canvas-grid-line: #232329;
+  --color-node-surface: #1c1c21;
+  --color-node-border: #3a3a44;
+  --color-stroke: #e9ecef;
+  --color-edge: #e9ecef;
+  --color-edge-selected: #8b87e8;
+  --color-selection-box: rgb(139 135 232 / 0.14);
+
+  --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-sm: 0 1px 4px rgb(0 0 0 / 0.5);
+  --shadow-md: 0 6px 20px rgb(0 0 0 / 0.55);
+  --shadow-lg: 0 16px 40px rgb(0 0 0 / 0.65);
+}
+
+/* shadcn/ui slot bridge — maps generated primitive expectations onto Cistem tokens. */
+:root {
+  --primary: var(--color-accent);
+  --primary-foreground: var(--color-accent-foreground);
+  --secondary: var(--color-surface-secondary);
+  --secondary-foreground: var(--color-text-primary);
+  --muted: var(--color-surface-tertiary);
+  --muted-foreground: var(--color-text-muted);
+  --popover: var(--color-surface);
+  --popover-foreground: var(--color-text-primary);
+  --card: var(--color-surface);
+  --card-foreground: var(--color-text-primary);
+  --input: var(--color-border);
+  --ring: var(--color-accent);
+  --destructive: var(--color-critical);
+  --destructive-foreground: var(--color-accent-foreground);
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+}
+
+/* ── Type scale (ui-tokens.md §4) ───────────────────────────────────────────
+   Accent (hand-drawn) font is reserved for: the wordmark, panel titles, and
+   large empty-state headlines. Everything functional uses the UI font. */
+@utility text-display {
+  font-family: var(--font-hand);
+  font-size: 28px;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  font-weight: 600;
+}
+
+@utility text-panel-title {
+  font-family: var(--font-hand);
+  font-size: 21px;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  font-weight: 600;
+}
+
+@utility text-eyebrow {
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@utility text-body {
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+@utility text-caption {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+@utility text-control {
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+/* Soft halo for the Save action while local changes are unsaved (motion §12). */
+@keyframes save-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(105 101 219 / 0);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgb(105 101 219 / 0.2);
+  }
+}
+
+@utility animate-save-glow {
+  border-radius: var(--radius-lg);
+  animation: save-glow 2.6s ease-in-out infinite;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-strong) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: var(--color-border-strong);
+    border-radius: 9999px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::selection {
+    background: var(--color-accent-light);
+  }
+
+  :focus-visible {
+    outline-color: var(--color-accent);
+  }
+
+  /* React Flow painting hooks that must follow the theme (CSS beats SVG attributes). */
+  .react-flow__background circle {
+    fill: var(--color-canvas-grid-dot);
+  }
+  .react-flow__attribution {
+    background: transparent;
+    color: var(--color-text-faint);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

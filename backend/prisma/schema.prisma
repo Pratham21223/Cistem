@@ -1,0 +1,43 @@
+// Cistem data model — PostgreSQL is the source of truth.
+// Canvas documents are stored as JSONB snapshots (see architecture.md §5); semantic
+// entities are relational. This initial migration covers users + projects (P0).
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "ts"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id          String   @id @db.Uuid
+  email       String?
+  displayName String?  @map("display_name")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  projects Project[]
+
+  @@map("users")
+}
+
+model Project {
+  id          String   @id @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  name        String
+  description String?
+  isGuest     Boolean  @default(false) @map("is_guest")
+  shareToken  String?  @unique @map("share_token")
+  isPublic    Boolean  @default(false) @map("is_public")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, updatedAt(sort: Desc)], name: "ix_projects_user_updated")
+  @@map("projects")
+}
